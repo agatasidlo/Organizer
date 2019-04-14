@@ -3,4 +3,7 @@
     <string name="addNote">add</string>
     <string name="note">note1</string>
     <string name="title_activity_list">List</string>
+    <string name="Lista">Lista zadań</string>
+    <string name="Kalendarz">Kalendarz</string>
+    <string name="Plan_zajec">Plan zajęć</string>
 </resources>
