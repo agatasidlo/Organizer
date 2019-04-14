@@ -1,20 +1,13 @@
 package com.example.organizer;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.Button;
 
-import java.io.File;
-import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-
-
-    String [] notesList = {"item1", "item2", "it"};
 
 
     @Override
@@ -22,47 +15,65 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String fileContents = "Itemno1\nItem 2\nitem33";
-        FileOutputStream outputStream;
+        Button listButton = (Button) findViewById(R.id.listButton);
+        Button calendarButton = (Button) findViewById(R.id.calendarButton);
+        Button scheduleButton = (Button) findViewById(R.id.scheduleButton);
 
-        try {
-            //File notesFile = getFilesDir();
-            outputStream = openFileOutput("notes", Context.MODE_PRIVATE);
-            outputStream.write(fileContents.getBytes());
-            notesList[0] = outputStream.toString();
-            //notesList = outputStream.toString().split("\\n");
-            outputStream.close();
+        listButton.setOnClickListener(new View.OnClickListener() {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onClick(View v) {
+                goToListActivity();
 
-        ListAdapter adap = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, notesList);
-        ListView viewList = (ListView) findViewById(R.id.viewList);
-        viewList.setAdapter(adap);
+            }
+
+        });
+
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goToCalendarActivity();
+
+            }
+
+        });
+
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goToScheduleActivity();
+
+            }
+
+        });
 
 
     }
 
-    //                  TODO - schedule
-    protected void showSchedule() {
+    private void goToListActivity() {
+
+        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+
+        startActivity(intent);
 
     }
 
+    private void goToCalendarActivity() {
 
-    //                  TODO - notes
-    protected void showNotes() {
+        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+
+        startActivity(intent);
+
+    }
+
+    private void goToScheduleActivity() {
+
+        Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
+
+        startActivity(intent);
 
     }
 
-    public void addNote(View addButton) {
-        // adding note to the list of notes
-        // refresh view
-    }
-
-
-    //                  TODO - todo list
-    protected void showTodoList() {
-
-    }
 }
