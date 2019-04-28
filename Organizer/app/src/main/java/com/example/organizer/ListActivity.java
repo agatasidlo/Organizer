@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<String> keysList = new ArrayList<>();
     private ArrayList<String> notesList = new ArrayList<>();
     private ArrayList<String> descpList = new ArrayList<>();
-    private ArrayList<String> statusList = new ArrayList<>();
+    private static ArrayList<String> statusList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +76,33 @@ public class ListActivity extends AppCompatActivity {
 
         });
 
+        //  ---------------------- remove checked button -----------------------
+        removeBtn = (Button) findViewById(R.id.removeCheckedBtn);
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
+                        .setTitle("Are you sure?")
+                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                removeChecked();
+                            }
+                        })
+                        .setNegativeButton("No", null).create();
+                dialogShowItem.show();
+            }
+
+        });
+
 // ------------------------- list --------------------------
 
-        final CustomListAdapter adapter = new CustomListAdapter(this, notesList, descpList);
+        final CustomListAdapter adapter = new CustomListAdapter(this, notesList, descpList, statusList);
         viewList = (ListView) findViewById(R.id.viewList);
         viewList.setAdapter(adapter);
 
+
         // ------------------------- click on list item --------------------------
+
         viewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -140,8 +161,10 @@ public class ListActivity extends AppCompatActivity {
                 keysList.add(id);
                 String nameData = dataSnapshot.child("Name").getValue(String.class);
                 String descData = dataSnapshot.child("Description").getValue(String.class);
+                String statusData = dataSnapshot.child("Status").getValue(String.class);
                 notesList.add(nameData);
                 descpList.add(descData);
+                statusList.add(statusData);
                 adapter.notifyDataSetChanged();
             }
 
@@ -149,10 +172,12 @@ public class ListActivity extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String name = dataSnapshot.child("Name").getValue(String.class);
                 String desc = dataSnapshot.child("Description").getValue(String.class);
+                String status = dataSnapshot.child("Status").getValue(String.class);
                 String key = dataSnapshot.getKey();
                 int index = keysList.indexOf(key);
                 notesList.set(index, name);
                 descpList.set(index, desc);
+                statusList.set(index, status);
                 adapter.notifyDataSetChanged();
 
             }
@@ -164,6 +189,7 @@ public class ListActivity extends AppCompatActivity {
                 keysList.remove(index);
                 notesList.remove(index);
                 descpList.remove(index);
+                statusList.remove(index);
                 adapter.notifyDataSetChanged();
             }
 
@@ -184,6 +210,24 @@ public class ListActivity extends AppCompatActivity {
         dataBase.child("List").removeValue();
     }
 
+    public void removeChecked(){
+        FirebaseDatabase.getInstance().getReference().child("List")
+        .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String status = snapshot.child("Status").getValue(String.class);
+                    if(status.equals("Done")){
+                        String key = snapshot.getKey();
+                        listDataBase.child(key).removeValue();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
 
 

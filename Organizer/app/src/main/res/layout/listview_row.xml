@@ -31,4 +31,13 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/CheckBoxId"
+        android:layout_width="38dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="6sp"
+        android:focusable="false"
+        android:padding="10dp"></CheckBox>
+
 </LinearLayout>
