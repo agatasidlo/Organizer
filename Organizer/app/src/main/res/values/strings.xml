@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Organizer</string>
     <string name="addNote">Add task</string>
+    <string name="removeAllNotes">Remove all</string>
     <string name="note">note1</string>
     <string name="title_activity_list">List</string>
     <string name="Lista">Task list</string>

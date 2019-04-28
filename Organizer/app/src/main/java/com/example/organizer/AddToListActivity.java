@@ -1,6 +1,5 @@
 package com.example.organizer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +44,7 @@ public class AddToListActivity extends AppCompatActivity {
                 dataMap.put("Name", taskName);
                 dataMap.put("Description", taskDescp);
                 dataMap.put("Status", "Not done");
+                //TODO: get key and update its values
                 listDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -60,8 +60,7 @@ public class AddToListActivity extends AppCompatActivity {
                 });
 
                 //back to the list
-                Intent intent = new Intent(AddToListActivity.this, ListActivity.class);
-                startActivity(intent);
+                finish();
 
             }
         });
