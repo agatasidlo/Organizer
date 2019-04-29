@@ -126,7 +126,7 @@ public class ListActivity extends AppCompatActivity {
                         .setNeutralButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {                   // save button
-                                HashMap<String, String> dataMap = new HashMap<String, String>();
+                                HashMap<String, String> dataMap = new HashMap<>();
                                 dataMap.put("Name", editText.getText().toString());
                                 dataMap.put("Description", editDescp.getText().toString());
                                 dataMap.put("Status", "Not done");

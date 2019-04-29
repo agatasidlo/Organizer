@@ -40,7 +40,7 @@ public class AddToListActivity extends AppCompatActivity {
                 String taskName = nameTxt.getText().toString().trim();
                 String taskDescp = descpTxt.getText().toString().trim();
                 //add to db
-                HashMap<String, String> dataMap = new HashMap<String, String>();
+                HashMap<String, String> dataMap = new HashMap<>();
                 dataMap.put("Name", taskName);
                 dataMap.put("Description", taskDescp);
                 dataMap.put("Status", "Not done");
