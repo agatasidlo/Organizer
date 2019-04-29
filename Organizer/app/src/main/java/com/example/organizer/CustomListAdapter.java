@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -19,11 +20,12 @@ public class CustomListAdapter extends ArrayAdapter {
     private final Activity context;
     private final ArrayList<String> taskArray;
     private final ArrayList<String> descriptionArray;
-    private final ArrayList<String> statusArray;
+    private static ArrayList<String> statusArray;
+    private final ArrayList<String> keyArray;
 
 
     //constructor
-    public CustomListAdapter(Activity context, ArrayList<String> taskArrayParam, ArrayList<String> descpArrayParam, ArrayList<String> statusArrayParam){
+    public CustomListAdapter(Activity context, ArrayList<String> taskArrayParam, ArrayList<String> descpArrayParam, ArrayList<String> statusArrayParam,  ArrayList<String> keyArrayParam){
 
         super(context,R.layout.listview_row , taskArrayParam);
 
@@ -31,7 +33,7 @@ public class CustomListAdapter extends ArrayAdapter {
         this.taskArray = taskArrayParam;
         this.descriptionArray = descpArrayParam;
         this.statusArray = statusArrayParam;
-
+        this.keyArray = keyArrayParam;
     }
 
     //populate data into each row
@@ -47,26 +49,33 @@ public class CustomListAdapter extends ArrayAdapter {
         infoTextField.setText(descriptionArray.get(position));
 
         listDataBase = FirebaseDatabase.getInstance().getReference().child("List");
-        checkBoxField.setOnClickListener(new View.OnClickListener() {
+        if(statusArray.get(position).equals("Not done")){
+            checkBoxField.setChecked(false);
+        }
+        else{
+            checkBoxField.setChecked(true);
+        }
+        checkBoxField.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                CheckBox cb = (CheckBox) v;
-                if(statusArray.get(position).equals("Not done")){
-                    cb.setChecked(true);
-                    statusArray.set(position, "Done");
-                    //
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    statusArray.set(position,"Done");
+                    ListActivity.setStatusList(statusArray);
+                    listDataBase.child(keyArray.get(position)).child("Status").getRef().setValue("Done");
                 }
-                else{
-                    cb.setChecked(false);
-                    statusArray.set(position, "Not done");
+                else
+                {
+                    statusArray.set(position,"Not done");
+                    ListActivity.setStatusList(statusArray);
+                    listDataBase.child(keyArray.get(position)).child("Status").getRef().setValue("Not done");
                 }
             }
         });
-
         return rowView;
     }
 
-    public ArrayList<String> getStatusArray(){
+    public static ArrayList<String> getStatusArray(){
         return statusArray;
     }
 

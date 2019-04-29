@@ -39,6 +39,9 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<String> descpList = new ArrayList<>();
     private static ArrayList<String> statusList = new ArrayList<>();
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +66,7 @@ public class ListActivity extends AppCompatActivity {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                statusList = CustomListAdapter.getStatusArray();
                 AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
                         .setTitle("Are you sure?")
                         .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
@@ -96,7 +100,7 @@ public class ListActivity extends AppCompatActivity {
 
 // ------------------------- list --------------------------
 
-        final CustomListAdapter adapter = new CustomListAdapter(this, notesList, descpList, statusList);
+        final CustomListAdapter adapter = new CustomListAdapter(this, notesList, descpList, statusList, keysList);
         viewList = (ListView) findViewById(R.id.viewList);
         viewList.setAdapter(adapter);
 
@@ -106,6 +110,8 @@ public class ListActivity extends AppCompatActivity {
         viewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                  //  Toast.makeText(ListActivity.this,  "checked", Toast.LENGTH_LONG).show();
+
                 final EditText editText = new EditText(ListActivity.this);
                 final EditText editDescp = new EditText(ListActivity.this);
                 editText.setText(notesList.get(position), TextView.BufferType.EDITABLE);
@@ -153,11 +159,11 @@ public class ListActivity extends AppCompatActivity {
         });
 
 
+
         listDataBase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String id = dataSnapshot.getKey();
-                //DatabaseReference keyRef = FirebaseDatabase.getInstance().getReference().child("List").child(id);
                 keysList.add(id);
                 String nameData = dataSnapshot.child("Name").getValue(String.class);
                 String descData = dataSnapshot.child("Description").getValue(String.class);
@@ -203,6 +209,10 @@ public class ListActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    static void setStatusList(ArrayList<String> newList){
+        statusList = newList;
     }
 
     public void removeAll(){
