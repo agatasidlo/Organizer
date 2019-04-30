@@ -25,11 +25,15 @@ public class CustomListAdapter extends ArrayAdapter {
 
 
     //constructor
-    public CustomListAdapter(Activity context, ArrayList<String> taskArrayParam, ArrayList<String> descpArrayParam, ArrayList<String> statusArrayParam,  ArrayList<String> keyArrayParam){
+    public CustomListAdapter(Activity context,
+                             ArrayList<String> taskArrayParam,
+                             ArrayList<String> descpArrayParam,
+                             ArrayList<String> statusArrayParam,
+                             ArrayList<String> keyArrayParam){
 
-        super(context,R.layout.listview_row , taskArrayParam);
+        super(context, R.layout.listview_row, taskArrayParam);
 
-        this.context=context;
+        this.context = context;
         this.taskArray = taskArrayParam;
         this.descriptionArray = descpArrayParam;
         this.statusArray = statusArrayParam;
