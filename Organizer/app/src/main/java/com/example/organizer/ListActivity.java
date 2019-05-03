@@ -66,7 +66,7 @@ public class ListActivity extends AppCompatActivity {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                statusList = CustomListAdapter.getStatusArray();
+                statusList = CustomListAdapter.getStatusArray();// ?
                 AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
                         .setTitle("Are you sure?")
                         .setPositiveButton("Yes",new DialogInterface.OnClickListener() {

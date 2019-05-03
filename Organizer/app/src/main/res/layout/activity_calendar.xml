@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".CalendarActivity">
 
+    <!--
     <CalendarView
         android:id="@+id/calendarViewId"
         android:layout_width="match_parent"
@@ -17,7 +18,30 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.301" />
+        app:layout_constraintVertical_bias="0.301" /> -->
+
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/calendarViewId"
+        android:layout_width="fill_parent"
+        android:layout_height="298dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:compactCalendarBackgroundColor="#FAFAFA"
+        app:compactCalendarCurrentDayBackgroundColor="#DD8FA6"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#D3AEB7"
+        app:compactCalendarMultiEventIndicatorColor="#fff"
+        app:compactCalendarTargetHeight="250dp"
+        app:compactCalendarTextColor="#000000"
+        app:compactCalendarTextSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/addNoteBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dataTextId"
+        app:layout_constraintVertical_bias="1.0" />
+
+
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier5"
@@ -54,11 +78,10 @@
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="124dp"
         android:text="@string/addNoteCalendar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/calendarViewId"
         app:layout_constraintVertical_bias="0.734" />
 
 </android.support.constraint.ConstraintLayout>
