@@ -72,7 +72,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         //display current month
         monthView = (TextView) findViewById(R.id.monthViewId);
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+        Calendar cal = Calendar.getInstance();
         cal.setTime(currentTime);
         final int month = cal.get(Calendar.MONTH);
         String[] monthTab = {"January", "February",
@@ -103,17 +103,15 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                Toast.makeText(CalendarActivity.this, "Month scrolled",
-                        Toast.LENGTH_SHORT).show();
                 monthView = (TextView) findViewById(R.id.monthViewId);
-                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+                Calendar cal = Calendar.getInstance();
                 cal.setTime(firstDayOfNewMonth);
                 final int month = cal.get(Calendar.MONTH);
                 String[] monthTab = {"January","February",
                         "March", "April", "May", "June", "July",
                         "August", "September", "October", "November",
                         "December"};
-                String monthTxt = monthTab[month+1];
+                String monthTxt = monthTab[month];
                 monthView.setText(monthTxt);
 
             }
@@ -293,7 +291,8 @@ public class CalendarActivity extends AppCompatActivity {
         daysArrayVisible.clear();
         monthsArrayVisible.clear();
         yearArrayVisible.clear();
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(
+        );
         cal.setTime(visiblePosition);
         final int year = cal.get(Calendar.YEAR);
         final int month = cal.get(Calendar.MONTH)+1;
