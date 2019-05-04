@@ -126,12 +126,12 @@ public class CalendarActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final EditText editText = new EditText(CalendarActivity.this);
                 editText.setText("", TextView.BufferType.EDITABLE);
-                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+                Calendar cal = Calendar.getInstance();
                 cal.setTime(visiblePosition);
                 final int year = cal.get(Calendar.YEAR);
-                final int month = cal.get(Calendar.MONTH)+1;
-                final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)+1;
-                String date = dayOfMonth + "/" + (month) + "/" + year;
+                final int month = cal.get(Calendar.MONTH);
+                final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+                String date = dayOfMonth + "/" + (month+1) + "/" + year;
                 AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(date)
                         .setView(editText)
@@ -143,7 +143,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 HashMap<String, String> dataMap = new HashMap<>();
                                 dataMap.put("Note", editText.getText().toString());
                                 dataMap.put("Day", Integer.toString(dayOfMonth));
-                                dataMap.put("Month", Integer.toString(month));
+                                dataMap.put("Month", Integer.toString(month+1));
                                 dataMap.put("Year", Integer.toString(year));
 
                                 calendarDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -293,11 +293,11 @@ public class CalendarActivity extends AppCompatActivity {
         daysArrayVisible.clear();
         monthsArrayVisible.clear();
         yearArrayVisible.clear();
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+        Calendar cal = Calendar.getInstance();
         cal.setTime(visiblePosition);
         final int year = cal.get(Calendar.YEAR);
         final int month = cal.get(Calendar.MONTH)+1;
-        final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)+1;
+        final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
         for(String i : keysArray){
             int k = keysArray.indexOf(i);
             if(Integer.toString(year).equals(yearsArray.get(k)) && Integer.toString(month).equals(monthsArray.get(k)) && Integer.toString(dayOfMonth).equals(daysArray.get(k))) {
