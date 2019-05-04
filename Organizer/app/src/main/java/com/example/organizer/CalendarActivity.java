@@ -291,8 +291,7 @@ public class CalendarActivity extends AppCompatActivity {
         daysArrayVisible.clear();
         monthsArrayVisible.clear();
         yearArrayVisible.clear();
-        Calendar cal = Calendar.getInstance(
-        );
+        Calendar cal = Calendar.getInstance();
         cal.setTime(visiblePosition);
         final int year = cal.get(Calendar.YEAR);
         final int month = cal.get(Calendar.MONTH)+1;
