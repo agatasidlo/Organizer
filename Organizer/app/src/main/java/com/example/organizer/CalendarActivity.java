@@ -103,15 +103,17 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
+                Toast.makeText(CalendarActivity.this, "Month scrolled",
+                        Toast.LENGTH_SHORT).show();
                 monthView = (TextView) findViewById(R.id.monthViewId);
                 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
                 cal.setTime(firstDayOfNewMonth);
                 final int month = cal.get(Calendar.MONTH);
-                String[] monthTab = {"January", "February",
+                String[] monthTab = {"January","February",
                         "March", "April", "May", "June", "July",
                         "August", "September", "October", "November",
                         "December"};
-                String monthTxt = monthTab[month];
+                String monthTxt = monthTab[month+1];
                 monthView.setText(monthTxt);
 
             }
@@ -127,21 +129,21 @@ public class CalendarActivity extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
                 cal.setTime(visiblePosition);
                 final int year = cal.get(Calendar.YEAR);
-                final int month = cal.get(Calendar.MONTH);
-                final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-                String date = dayOfMonth + "/" + (month + 1) + "/" + year;
+                final int month = cal.get(Calendar.MONTH)+1;
+                final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)+1;
+                String date = dayOfMonth + "/" + (month) + "/" + year;
                 AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(date)
                         .setView(editText)
                         .setMessage("Make a note!")
-                        .setNeutralButton("Add", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //add to db
                                 HashMap<String, String> dataMap = new HashMap<>();
                                 dataMap.put("Note", editText.getText().toString());
                                 dataMap.put("Day", Integer.toString(dayOfMonth));
-                                dataMap.put("Month", Integer.toString(month+1));
+                                dataMap.put("Month", Integer.toString(month));
                                 dataMap.put("Year", Integer.toString(year));
 
                                 calendarDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -295,7 +297,7 @@ public class CalendarActivity extends AppCompatActivity {
         cal.setTime(visiblePosition);
         final int year = cal.get(Calendar.YEAR);
         final int month = cal.get(Calendar.MONTH)+1;
-        final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)+1;
         for(String i : keysArray){
             int k = keysArray.indexOf(i);
             if(Integer.toString(year).equals(yearsArray.get(k)) && Integer.toString(month).equals(monthsArray.get(k)) && Integer.toString(dayOfMonth).equals(daysArray.get(k))) {
