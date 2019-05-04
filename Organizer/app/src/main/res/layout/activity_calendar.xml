@@ -6,25 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".CalendarActivity">
 
-    <!--
-    <CalendarView
-        android:id="@+id/calendarViewId"
-        android:layout_width="match_parent"
-        android:layout_height="322dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.301" /> -->
-
-
     <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarViewId"
         android:layout_width="fill_parent"
-        android:layout_height="298dp"
+        android:layout_height="264dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:paddingLeft="10dp"
@@ -58,7 +43,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="3dp" />
+        tools:layout_editor_absoluteY="0dp" />
 
     <ListView
         android:id="@+id/listCalendarId"
@@ -83,5 +68,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.734" />
+
+    <TextView
+        android:id="@+id/monthViewId"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.203" />
 
 </android.support.constraint.ConstraintLayout>

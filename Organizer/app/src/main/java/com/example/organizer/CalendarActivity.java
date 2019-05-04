@@ -34,11 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
-//import com.github.sundeepk.compactcalendarview.domain.Event;
+
 
 public class CalendarActivity extends AppCompatActivity {
     private CompactCalendarView calendar;
     private TextView dataView;
+    private TextView monthView;
     private Button addNoteBtn;
     private ListView calendarList;
     private DatabaseReference calendarDataBase;
@@ -52,8 +53,6 @@ public class CalendarActivity extends AppCompatActivity {
     private ArrayList<String> daysArrayVisible = new ArrayList<>();
     private ArrayList<String> monthsArrayVisible = new ArrayList<>();
     private ArrayList<String> yearArrayVisible = new ArrayList<>();
-    private ArrayList<String> keysArrayVisible = new ArrayList<>();
-
 
 
 
@@ -70,6 +69,18 @@ public class CalendarActivity extends AppCompatActivity {
         Date currentTime = Calendar.getInstance().getTime();
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
         dataView.setText(currentDate);
+
+        //display current month
+        monthView = (TextView) findViewById(R.id.monthViewId);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+        cal.setTime(currentTime);
+        final int month = cal.get(Calendar.MONTH);
+        String[] monthTab = {"January", "February",
+                "March", "April", "May", "June", "July",
+                "August", "September", "October", "November",
+                "December"};
+        String monthTxt = monthTab[month];
+        monthView.setText(monthTxt);
 
 
         setVisible();
@@ -92,7 +103,17 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-               //TODO: months displaying
+                monthView = (TextView) findViewById(R.id.monthViewId);
+                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe"));
+                cal.setTime(firstDayOfNewMonth);
+                final int month = cal.get(Calendar.MONTH);
+                String[] monthTab = {"January", "February",
+                        "March", "April", "May", "June", "July",
+                        "August", "September", "October", "November",
+                        "December"};
+                String monthTxt = monthTab[month];
+                monthView.setText(monthTxt);
+
             }
         });
 
@@ -151,19 +172,19 @@ public class CalendarActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 //TODO: fix wrong position
                 final EditText editText = new EditText(CalendarActivity.this);
-                editText.setText(notesArray.get(position), TextView.BufferType.EDITABLE);
+                editText.setText(notesArrayVisible.get(position), TextView.BufferType.EDITABLE);
                 AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
-                        .setTitle(notesArray.get(position)).setView(editText)
+                        .setTitle(notesArrayVisible.get(position)).setView(editText)
                         .setNeutralButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {                   // save button
-                                calendarDataBase.child(keysArray.get(position)).child("Note").getRef().setValue(editText.getText().toString());
+                                calendarDataBase.child(keysArray.get(getPosition(position))).child("Note").getRef().setValue(editText.getText().toString());
                             }
                         })
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {                // delete button
-                                calendarDataBase.child(keysArray.get(position)).getRef().removeValue();
+                                calendarDataBase.child(keysArray.get(getPosition(position))).getRef().removeValue();
                             }
                         }).setNegativeButton("Close", null).create();            // close button
                 dialogShowItem.show();
@@ -250,6 +271,18 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //get position of note in db
+    public int getPosition(int position) {
+        int newPosition=0;
+        for (String i : keysArray) {
+            int k = keysArray.indexOf(i);
+            if (yearArrayVisible.get(position).equals(yearsArray.get(k)) && monthsArrayVisible.get(position).equals(monthsArray.get(k)) && daysArrayVisible.get(position).equals(daysArray.get(k))) {
+                newPosition = k;
+            }
+        }
+        return newPosition;
     }
 
     //sets which notes should be visible in listview
