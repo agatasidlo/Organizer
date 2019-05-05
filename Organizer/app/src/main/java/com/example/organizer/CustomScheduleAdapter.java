@@ -10,18 +10,20 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CustomScheduleAdapter extends ArrayAdapter {
 
-    private DatabaseReference scheduleDataBase;
     private final Activity context;
     private ArrayList<String> subjectsArray;
+    private ArrayList<String> descpArray;
     private ArrayList<String> fromArray;
     private ArrayList<String> toArray;
 
     public CustomScheduleAdapter(Activity context,
                                  ArrayList<String> subjectsArrayParam,
+                                 ArrayList<String> descpArrayParam,
                                  ArrayList<String> fromArrayParam,
                                  ArrayList<String> toArrayParam) {
 
@@ -29,6 +31,7 @@ public class CustomScheduleAdapter extends ArrayAdapter {
 
         this.context = context;
         this.subjectsArray = subjectsArrayParam;
+        this.descpArray = descpArrayParam;
         this.fromArray = fromArrayParam;
         this.toArray = toArrayParam;
     }
@@ -40,15 +43,15 @@ public class CustomScheduleAdapter extends ArrayAdapter {
         View rowView = inflater.inflate(R.layout.schedule_row, null, true);
 
         TextView nameField = (TextView) rowView.findViewById(R.id.subjectNameID);
+        TextView descpField = (TextView) rowView.findViewById(R.id.descriptionID);
         TextView fromField = (TextView) rowView.findViewById(R.id.scheduleFromID);
         TextView toField = (TextView) rowView.findViewById(R.id.scheduleToID);
 
 
         nameField.setText(subjectsArray.get(position));
+        descpField.setText(descpArray.get(position));
         fromField.setText(fromArray.get(position));
         toField.setText(toArray.get(position));
-
-        //scheduleDataBase = FirebaseDatabase.getInstance().getReference().child("Schedule");
 
         return rowView;
     }

@@ -1,51 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="horizontal"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/subjectNameID"
-        android:layout_width="378dp"
-        android:layout_height="31dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="123dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/scheduleFromTextID"
-        android:layout_width="40dp"
-        android:layout_height="25dp"
-        android:text="From:"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="154dp" />
 
-    <TextView
-        android:id="@+id/scheduleToTextID"
-        android:layout_width="34dp"
-        android:layout_height="22dp"
-        android:text="To:"
-        tools:layout_editor_absoluteX="187dp"
-        tools:layout_editor_absoluteY="154dp" />
+        <TextView
+            android:id="@+id/subjectNameID"
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
 
-    <EditText
-        android:id="@+id/scheduleFromID"
-        android:layout_width="101dp"
-        android:layout_height="25dp"
-        android:ems="10"
-        android:inputType="time"
-        tools:layout_editor_absoluteX="61dp"
-        tools:layout_editor_absoluteY="155dp" />
+        <TextView
+            android:id="@+id/descriptionID"
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
 
-    <EditText
-        android:id="@+id/scheduleToID"
-        android:layout_width="101dp"
-        android:layout_height="25dp"
-        android:ems="10"
-        android:inputType="time"
-        tools:layout_editor_absoluteX="221dp"
-        tools:layout_editor_absoluteY="154dp" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/scheduleFromTextID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="4dp"
+                android:text="From:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/scheduleToTextID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="192dp"
+                android:layout_marginLeft="192dp"
+                android:layout_marginTop="4dp"
+                android:text="To:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/scheduleFromID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="96dp"
+                android:layout_marginLeft="96dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="5dp" />
+
+            <TextView
+                android:id="@+id/scheduleToID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="220dp"
+                android:layout_marginLeft="220dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="5dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

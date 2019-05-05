@@ -5,12 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class ScheduleActivity extends AppCompatActivity {
     public String chosenDay = "";
     private ArrayList<Button> daysBtn = new ArrayList<>();
+    private Button addNewSubject;
 
 
 
@@ -26,12 +28,13 @@ public class ScheduleActivity extends AppCompatActivity {
         daysBtn.add((Button) findViewById(R.id.thursdayID));
         daysBtn.add((Button) findViewById(R.id.fridayID));
 
+        addNewSubject = (Button) findViewById(R.id.addNewSubjectBtn);
+
 
         daysBtn.get(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToScheduleSubjectListActivity("Monday");
-                finish();
             }
         });
 
@@ -39,7 +42,6 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToScheduleSubjectListActivity("Tuesday");
-                finish();
             }
         });
 
@@ -47,7 +49,7 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToScheduleSubjectListActivity("Wednesday");
-                finish();
+
             }
         });
 
@@ -55,7 +57,6 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToScheduleSubjectListActivity("Thursday");
-                finish();
             }
         });
 
@@ -63,7 +64,14 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToScheduleSubjectListActivity("Friday");
-                finish();
+            }
+        });
+
+        addNewSubject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleActivity.this, AddToScheduleActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -76,6 +84,5 @@ public class ScheduleActivity extends AppCompatActivity {
         b.putString("day",chosenDay);
         intent.putExtras(b);
         startActivity(intent);
-        finish();
     }
 }

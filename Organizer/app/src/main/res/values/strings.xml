@@ -9,4 +9,14 @@
     <string name="Kalendarz">Calendar</string>
     <string name="Plan_zajec">Schedule</string>
     <string name="addNoteCalendar">Add note</string>
+
+    <string-array name="days_array">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+    </string-array>
+    <string name="day">Choose day</string>
+
 </resources>
