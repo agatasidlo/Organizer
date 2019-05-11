@@ -3,6 +3,7 @@ package com.example.organizer;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 
@@ -67,7 +69,7 @@ public class CalendarActivity extends AppCompatActivity {
         //display current date
         dataView = (TextView) findViewById(R.id.dataTextId);
         Date currentTime = Calendar.getInstance().getTime();
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(currentTime);
         dataView.setText(currentDate);
 
         //display current month
@@ -86,6 +88,8 @@ public class CalendarActivity extends AppCompatActivity {
         setVisible();
         calendar = (CompactCalendarView) findViewById(R.id.calendarViewId);
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        String[] daysTab = {"M","T","W","T","F","S","S"};
+        calendar.setDayColumnNames(daysTab);
         final CustomCalendarAdapter adapter = new CustomCalendarAdapter(this, notesArrayVisible, daysArrayVisible, monthsArrayVisible,yearArrayVisible);
 
         calendarList = (ListView) findViewById(R.id.listCalendarId);
@@ -130,36 +134,62 @@ public class CalendarActivity extends AppCompatActivity {
                 final int month = cal.get(Calendar.MONTH);
                 final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
                 String date = dayOfMonth + "/" + (month+1) + "/" + year;
-                AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
+                final AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(date)
                         .setView(editText)
                         .setMessage("Make a note!")
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Add", null)
+                        .setNegativeButton("Close", null)
+                        .create();
+                dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(final DialogInterface dialog) {
+                        Button posBtn = ((AlertDialog)dialogShowItem).getButton(AlertDialog.BUTTON_POSITIVE);
+                        posBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //add to db
-                                HashMap<String, String> dataMap = new HashMap<>();
-                                dataMap.put("Note", editText.getText().toString());
-                                dataMap.put("Day", Integer.toString(dayOfMonth));
-                                dataMap.put("Month", Integer.toString(month+1));
-                                dataMap.put("Year", Integer.toString(year));
+                            public void onClick(View v) {
+                                final String note = editText.getText().toString();
+                                boolean exists=false;
+                                for (String n: notesArray) {
+                                    if(n.equals(note)) exists = true;
+                                }
+                                if (note.equals("")) {
+                                    editText.setHint("Note is required!");
+                                    editText.setHintTextColor(Color.RED);
+                                    dialogShowItem.show();
 
-                                calendarDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        //check if stored correctly
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(CalendarActivity.this, "Added", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Toast.makeText(CalendarActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                }else if(exists==true){
+                                    editText.setText("");
+                                    editText.setHint("Note already exists!");
+                                    editText.setHintTextColor(Color.RED);
+                                    dialogShowItem.show();
+                                }
+                                else {
+                                    dialog.cancel();
+                                    //add to db
+                                    HashMap<String, String> dataMap = new HashMap<>();
+                                    dataMap.put("Note", note);
+                                    dataMap.put("Day", Integer.toString(dayOfMonth));
+                                    dataMap.put("Month", Integer.toString(month + 1));
+                                    dataMap.put("Year", Integer.toString(year));
 
+                                    calendarDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            //check if stored correctly
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(CalendarActivity.this, "Added", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(CalendarActivity.this, "Error", Toast.LENGTH_LONG).show();
+
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
-                        })
-                        .setNegativeButton("Close", null).create();
-
+                            });
+                    }
+                });
                 dialogShowItem.show();
 
             }
@@ -173,20 +203,51 @@ public class CalendarActivity extends AppCompatActivity {
                 //TODO: fix wrong position
                 final EditText editText = new EditText(CalendarActivity.this);
                 editText.setText(notesArrayVisible.get(position), TextView.BufferType.EDITABLE);
-                AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
+                final AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(notesArrayVisible.get(position)).setView(editText)
-                        .setNeutralButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {                   // save button
-                                calendarDataBase.child(keysArray.get(getPosition(position))).child("Note").getRef().setValue(editText.getText().toString());
-                            }
-                        })
+                        .setNeutralButton("Save", null)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {                // delete button
-                                calendarDataBase.child(keysArray.get(getPosition(position))).getRef().removeValue();
+                            public void onClick(DialogInterface dialog, int which) {
+                                int newPosition = getPosition(position);
+                                calendarDataBase.child(keysArray.get(newPosition)).getRef().removeValue();
                             }
-                        }).setNegativeButton("Close", null).create();            // close button
+                        })
+                        .setNegativeButton("Close", null)
+                        .create();
+
+                dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(final DialogInterface dialog) {
+                        Button neuBtn = ((AlertDialog) dialogShowItem).getButton(AlertDialog.BUTTON_NEUTRAL);
+                        neuBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String note = editText.getText().toString();
+                                boolean exists=false;
+                                for (String n: notesArray) {
+                                    if(n.equals(note)) exists = true;
+                                }
+                                if (note.equals("")) {
+                                    editText.setHint("Note is required!");
+                                    editText.setHintTextColor(Color.RED);
+                                    dialogShowItem.show();
+
+                                }
+                                else if(exists==true){
+                                    editText.setText("");
+                                    editText.setHint("Note already exists!");
+                                    editText.setHintTextColor(Color.RED);
+                                    dialogShowItem.show();
+                                }
+                                else {
+                                    dialog.cancel();
+                                    calendarDataBase.child(keysArray.get(getPosition(position))).child("Note").getRef().setValue(note);
+                                }
+                            }
+                        });
+                    }
+                });
                 dialogShowItem.show();
             }
         });
@@ -211,7 +272,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
                 Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
-                Event ev = new Event(Color.RED, date.getTime(), nameData);
+                Event ev = new Event(Color.RED, date.getTime(), id);
                 calendar.addEvent(ev);
 
             }
@@ -230,8 +291,6 @@ public class CalendarActivity extends AppCompatActivity {
                 yearsArray.set(index, yearData);
                 setVisible();
                 adapter.notifyDataSetChanged();
-
-                //TODO: handle changed events
             }
 
             @Override
@@ -250,14 +309,14 @@ public class CalendarActivity extends AppCompatActivity {
                 setVisible();
                 adapter.notifyDataSetChanged();
 
-                //TODO: handle events on the same days with the same name
-                Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
+                //blad przy usuwaniu jednego eventu z wielu w ciagu dnia
+               /* Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
                 List<Event> eventsList = calendar.getEvents(date);
                 for(Event e: eventsList){
-                    if(e.getData().toString().equals(nameData)){
+                    if(key.equals(e.getData())){
                         calendar.removeEvent(e);
                     }
-                }
+                }*/
             }
 
             @Override
@@ -278,10 +337,14 @@ public class CalendarActivity extends AppCompatActivity {
         int newPosition=0;
         for (String i : keysArray) {
             int k = keysArray.indexOf(i);
-            if (yearArrayVisible.get(position).equals(yearsArray.get(k)) && monthsArrayVisible.get(position).equals(monthsArray.get(k)) && daysArrayVisible.get(position).equals(daysArray.get(k))) {
+            if (yearArrayVisible.get(position).equals(yearsArray.get(k)) &&
+                    monthsArrayVisible.get(position).equals(monthsArray.get(k)) &&
+                    daysArrayVisible.get(position).equals(daysArray.get(k)) &&
+                    notesArrayVisible.get(position).equals(notesArray.get(k))) {
                 newPosition = k;
             }
         }
+
         return newPosition;
     }
 

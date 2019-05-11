@@ -2,6 +2,7 @@ package com.example.organizer;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -110,7 +111,6 @@ public class ListActivity extends AppCompatActivity {
         viewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                  //  Toast.makeText(ListActivity.this,  "checked", Toast.LENGTH_LONG).show();
 
                 final EditText editText = new EditText(ListActivity.this);
                 final EditText editDescp = new EditText(ListActivity.this);
@@ -120,40 +120,40 @@ public class ListActivity extends AppCompatActivity {
                 ll.setOrientation(LinearLayout.VERTICAL);
                 ll.addView(editText);
                 ll.addView(editDescp);
-                AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
+                final AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
                         .setTitle(notesList.get(position)).setView(editText)
                         .setView(ll)
-                        .setNeutralButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {                   // save button
-                                HashMap<String, String> dataMap = new HashMap<>();
-                                dataMap.put("Name", editText.getText().toString());
-                                dataMap.put("Description", editDescp.getText().toString());
-                                dataMap.put("Status", "Not done");
-                                listDataBase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        //check if stored correctly
-                                        if(task.isSuccessful()) {
-                                            Toast.makeText(ListActivity.this,  "Edited", Toast.LENGTH_LONG).show();
-                                        }
-                                        else {
-                                            Toast.makeText(ListActivity.this,  "Error", Toast.LENGTH_LONG).show();
-
-                                        }
-                                    }
-                                });
-
-                                //listDataBase.updateChildren(map); //czy to potrzebne?
-                                listDataBase.child(keysList.get(position)).getRef().removeValue();
-                            }
-                        })
+                        .setNeutralButton("Save",null)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {                // delete button
                                 listDataBase.child(keysList.get(position)).getRef().removeValue();
                             }
-                        }).setNegativeButton("Close", null).create();            // close button
+                        }).setNegativeButton("Close", null)
+                        .create();
+                dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
+                                                     @Override
+                                                     public void onShow(final DialogInterface dialog) {
+                                                         Button neuBtn = ((AlertDialog) dialogShowItem).getButton(AlertDialog.BUTTON_NEUTRAL);
+                                                         neuBtn.setOnClickListener(new View.OnClickListener() {
+                                                             @Override
+                                                             public void onClick(View v) {
+                                                                 String task = editText.getText().toString();
+                                                                 if (task.equals("")) {
+                                                                     editText.setHint("Task is required!");
+                                                                     editText.setHintTextColor(Color.RED);
+                                                                     dialogShowItem.show();
+
+                                                                 } else {
+                                                                     dialog.cancel();
+                                                                     listDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
+                                                                     listDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
+                                                                     listDataBase.child(keysList.get(position)).child("Status").getRef().setValue("Not done");
+                                                                 }
+                                                             }
+                                                         });
+                                                     }
+                                                 });
                 dialogShowItem.show();
             }
         });

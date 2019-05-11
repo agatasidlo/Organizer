@@ -1,6 +1,7 @@
 package com.example.organizer;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,8 +25,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 public class ScheduleSubjectListActivity extends AppCompatActivity {
 
@@ -75,32 +83,63 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                 ll.addView(editDescp);
                 ll.addView(editFromTime);
                 ll.addView(editToTime);
-                AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
+                final AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
                         .setTitle(subjectArray.get(position)).setView(editText)
                         .setView(ll)
-                        .setNeutralButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                scheduleDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
-                                scheduleDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
-                                scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(editFromTime.getText().toString());
-                                scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(editToTime.getText().toString());
-                                //reload activity to get proper ordered view:
-                                finish();
-                                startActivity(getIntent());
-                            }
-                        })
+                        .setNeutralButton("Save", null)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 scheduleDataBase.child(keysList.get(position)).getRef().removeValue();
                             }
-                        }).setNegativeButton("Close", null).create();
+                        }).setNegativeButton("Close", null)
+                        .create();
+                dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
+                                                     @Override
+                                                     public void onShow(final DialogInterface dialog) {
+                                                         Button neuBtn = ((AlertDialog) dialogShowItem).getButton(AlertDialog.BUTTON_NEUTRAL);
+                                                         neuBtn.setOnClickListener(new View.OnClickListener() {
+                                                             @Override
+                                                             public void onClick(View v) {
+                                                                 String name = editText.getText().toString();
+                                                                 String timeFrom = editFromTime.getText().toString();
+                                                                 String timeTo = editToTime.getText().toString();
+                                                                 if (name.equals("") || timeFrom.equals("") || timeTo.equals("")) {
+                                                                     if (name.equals("")) {
+                                                                         editText.setHint("Name is required!");
+                                                                         editText.setHintTextColor(Color.RED);
+                                                                         dialogShowItem.show();
+                                                                     }
+                                                                     if (timeFrom.equals("")) {
+                                                                         editFromTime.setHint("Time is required!");
+                                                                         editFromTime.setHintTextColor(Color.RED);
+                                                                         dialogShowItem.show();
+                                                                     }
+                                                                     if (timeFrom.equals("")) {
+                                                                         editToTime.setHint("Time is required!");
+                                                                         editToTime.setHintTextColor(Color.RED);
+                                                                         dialogShowItem.show();
+                                                                     }
+                                                                 } else {
+                                                                     dialog.cancel();
+                                                                     scheduleDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
+                                                                     scheduleDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
+                                                                     scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(editFromTime.getText().toString());
+                                                                     scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(editToTime.getText().toString());
+                                                                     //reload activity to get proper ordered view:
+                                                                     finish();
+                                                                     startActivity(getIntent());
+                                                                 }
+
+                                                             }
+                                                         });
+                                                     }
+                                                 });
                 dialogShowItem.show();
             }
         });
 
-        scheduleDataBase.orderByChild("From").addChildEventListener(new ChildEventListener() {
+        scheduleDataBase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String id = dataSnapshot.getKey();
