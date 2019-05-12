@@ -3,7 +3,6 @@ package com.example.organizer;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -32,9 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 
 
@@ -150,9 +147,31 @@ public class CalendarActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 final String note = editText.getText().toString();
                                 boolean exists=false;
-                                for (String n: notesArray) {
-                                    if(n.equals(note)) exists = true;
+                                String monthOfAddedNote="0";
+
+                                switch (visiblePosition.toString().substring(4,7)){
+                                    case "Jan": { monthOfAddedNote="1"; break; }
+                                    case "Feb": { monthOfAddedNote="2"; break; }
+                                    case "Mar": { monthOfAddedNote="3"; break; }
+                                    case "Apr": { monthOfAddedNote="4"; break; }
+                                    case "May": { monthOfAddedNote="5"; break; }
+                                    case "Jun": { monthOfAddedNote="6"; break; }
+                                    case "Jul": { monthOfAddedNote="7"; break; }
+                                    case "Aug": { monthOfAddedNote="8"; break; }
+                                    case "Sep": { monthOfAddedNote="9"; break; }
+                                    case "Oct": { monthOfAddedNote="10"; break; }
+                                    case "Nov": { monthOfAddedNote="11"; break; }
+                                    case "Dec": { monthOfAddedNote="12"; break; }
                                 }
+
+                                for (int node = 0; node < notesArray.size(); node++) {
+                                    if (notesArray.get(node).equals(note)
+                                            && daysArray.get(node).equals(visiblePosition.toString().substring(8,10))
+                                            && monthsArray.get(node).equals(monthOfAddedNote)
+                                            && yearsArray.get(node).equals(visiblePosition.toString().substring(visiblePosition.toString().length()-4)))
+                                        exists = true;
+                                }
+
                                 if (note.equals("")) {
                                     editText.setHint("Note is required!");
                                     editText.setHintTextColor(Color.RED);
@@ -225,9 +244,30 @@ public class CalendarActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 String note = editText.getText().toString();
                                 boolean exists=false;
-                                for (String n: notesArray) {
-                                    if(n.equals(note)) exists = true;
+                                String monthOfAddedNote="0";
+                                switch (visiblePosition.toString().substring(5,8)){
+                                    case "Jan": { monthOfAddedNote="1"; break; }
+                                    case "Feb": { monthOfAddedNote="2"; break; }
+                                    case "Mar": { monthOfAddedNote="3"; break; }
+                                    case "Apr": { monthOfAddedNote="4"; break; }
+                                    case "May": { monthOfAddedNote="5"; break; }
+                                    case "Jun": { monthOfAddedNote="6"; break; }
+                                    case "Jul": { monthOfAddedNote="7"; break; }
+                                    case "Aug": { monthOfAddedNote="8"; break; }
+                                    case "Sep": { monthOfAddedNote="9"; break; }
+                                    case "Oct": { monthOfAddedNote="10"; break; }
+                                    case "Nov": { monthOfAddedNote="11"; break; }
+                                    case "Dec": { monthOfAddedNote="12"; break; }
                                 }
+                                for (int node = 0; node < notesArray.size(); node++) {
+
+                                    if (notesArray.get(node).equals(note)
+                                            && daysArray.get(node).equals(visiblePosition.toString().substring(8,10))
+                                            && monthsArray.get(node).equals(monthOfAddedNote)
+                                            && yearsArray.get(node).equals(visiblePosition.toString().substring(visiblePosition.toString().length()-4,visiblePosition.toString().length()-1)))
+                                        exists = true;
+                                }
+
                                 if (note.equals("")) {
                                     editText.setHint("Note is required!");
                                     editText.setHintTextColor(Color.RED);
@@ -273,7 +313,10 @@ public class CalendarActivity extends AppCompatActivity {
 
                 Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
                 Event ev = new Event(Color.RED, date.getTime(), id);
-                calendar.addEvent(ev);
+
+
+                if (calendar.getEvents(date).isEmpty())
+                    calendar.addEvent(ev);
 
             }
 
@@ -301,6 +344,22 @@ public class CalendarActivity extends AppCompatActivity {
                 String yearData = dataSnapshot.child("Year").getValue(String.class);
                 String key = dataSnapshot.getKey();
                 int index = keysArray.indexOf(key);
+
+                Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
+                boolean ifDelete = true;
+
+                for (int i=0; i<daysArray.size(); i++) {
+                    if (index != i
+                            && daysArray.get(index).equals(daysArray.get(i))
+                            && monthsArray.get(index).equals(monthsArray.get(i))
+                            && yearsArray.get(index).equals(yearsArray.get(i)))
+                        ifDelete = false;
+                }
+
+
+                    if (ifDelete)
+                        calendar.removeEvents(date);
+
                 keysArray.remove(index);
                 notesArray.remove(index);
                 daysArray.remove(index);
