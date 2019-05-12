@@ -1,13 +1,19 @@
 package com.example.organizer;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.solver.widgets.ConstraintHorizontalLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -24,15 +30,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ScheduleSubjectListActivity extends AppCompatActivity {
 
@@ -45,26 +56,120 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     private ArrayList<String> toArray = new ArrayList<>();
     private ArrayList<String> keysList = new ArrayList<>();
     private DatabaseReference scheduleDataBase;
+    private Toolbar toolbar;
+    private TabLayout tablayout;
+    private String chosenDay;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.addId){
+            finish();
+            Intent intent = new Intent(ScheduleSubjectListActivity.this, AddToScheduleActivity.class);
+            startActivity(intent);
+
+        }
+        else if(item.getItemId() == R.id.removeId){
+            AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
+                    .setTitle("Are you sure?")
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeAll();
+                        }
+                    })
+                    .setNegativeButton("No", null).create();
+            dialogShowItem.show();
+
+        }
+        else return super.onOptionsItemSelected(item);
+        return true;
+    }
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_schedule_subject_list);
+
         Bundle b = getIntent().getExtras();
-        String chosenDay = "";
         if (b != null)
             chosenDay = b.getString("day");
+
         scheduleDataBase = FirebaseDatabase.getInstance().getReference().child("Schedule").child(chosenDay);
-
-
         dayNameTextView = (TextView) findViewById(R.id.dayNameID);
         dayName = dayNameTextView.getText().toString().trim();
         dayNameTextView.setText(chosenDay);
-
+        tablayout = findViewById(R.id.tabId);
+        int tabIndex=0;
+        switch (chosenDay){
+            case "Monday":
+                tabIndex = 0;
+                break;
+            case "Tuesday":
+                tabIndex = 1;
+                break;
+            case "Wednesday":
+                tabIndex = 2;
+                break;
+            case "Thursday":
+                tabIndex = 3;
+                break;
+            case "Friday":
+                tabIndex = 4;
+                break;
+        }
+        TabLayout.Tab tab = tablayout.getTabAt(tabIndex);
+        tab.select();
         final CustomScheduleAdapter adapter = new CustomScheduleAdapter(this, subjectArray, descpArray, fromArray, toArray);
         subjectsListView = (ListView) findViewById(R.id.subjectsID);
         subjectsListView.setAdapter(adapter);
+
+        tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String day = tab.getText().toString();
+                switch (day){
+                    case "Mon":
+                        chosenDay = "Monday";
+                        break;
+                    case "Tue":
+                        chosenDay = "Tuesday";
+                        break;
+                    case "Wed":
+                        chosenDay = "Wednesday";
+                        break;
+                    case "Thu":
+                        chosenDay = "Thursday";
+                        break;
+                    case "Fri":
+                        chosenDay = "Friday";
+                        break;
+                }
+                Intent intent = new Intent(ScheduleSubjectListActivity.this, ScheduleSubjectListActivity.class);
+                Bundle b = new Bundle();
+                b.putString("day",chosenDay);
+                intent.putExtras(b);
+                finish();
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
 
         subjectsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -124,8 +229,8 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                                                                      dialog.cancel();
                                                                      scheduleDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
                                                                      scheduleDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
-                                                                     scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(editFromTime.getText().toString());
-                                                                     scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(editToTime.getText().toString());
+                                                                     scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(changeTimeToInt(editFromTime.getText().toString()));
+                                                                     scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(changeTimeToInt(editToTime.getText().toString()));
                                                                      //reload activity to get proper ordered view:
                                                                      finish();
                                                                      startActivity(getIntent());
@@ -139,15 +244,15 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
             }
         });
 
-        scheduleDataBase.addChildEventListener(new ChildEventListener() {
+        scheduleDataBase.orderByChild("From").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String id = dataSnapshot.getKey();
                 keysList.add(id);
                 String nameData = dataSnapshot.child("Name").getValue(String.class);
                 String descData = dataSnapshot.child("Description").getValue(String.class);
-                String fromData = dataSnapshot.child("From").getValue(String.class);
-                String toData = dataSnapshot.child("To").getValue(String.class);
+                String fromData = changeTimeToString(dataSnapshot.child("From").getValue(Integer.class));
+                String toData = changeTimeToString(dataSnapshot.child("To").getValue(Integer.class));
                 subjectArray.add(nameData);
                 descpArray.add(descData);
                 fromArray.add(fromData);
@@ -159,8 +264,8 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String name = dataSnapshot.child("Name").getValue(String.class);
                 String desc = dataSnapshot.child("Description").getValue(String.class);
-                String fromData = dataSnapshot.child("From").getValue(String.class);
-                String toData = dataSnapshot.child("To").getValue(String.class);
+                String fromData = changeTimeToString(dataSnapshot.child("From").getValue(Integer.class));
+                String toData = changeTimeToString(dataSnapshot.child("To").getValue(Integer.class));
                 String key = dataSnapshot.getKey();
                 int index = keysList.indexOf(key);
                 subjectArray.set(index, name);
@@ -193,5 +298,26 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public String changeTimeToString(int time){
+        String newTime;
+        newTime = Integer.toString(time);
+        if(newTime.length()==3) newTime = "0" + newTime;
+        newTime = newTime.substring(0,2) + ":" + newTime.substring(2,4);
+        return newTime;
+    }
+
+    public int changeTimeToInt(String time){
+        int newTime;
+        String newTimeStr;
+        newTimeStr = time.substring(0,2)+time.substring(3,5);
+        newTime=Integer.parseInt(newTimeStr);
+        return newTime;
+    }
+
+    public void removeAll(){
+        DatabaseReference dataBase = FirebaseDatabase.getInstance().getReference();
+        dataBase.child("Schedule").removeValue();
     }
 }

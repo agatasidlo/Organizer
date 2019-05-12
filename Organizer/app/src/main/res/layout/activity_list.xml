@@ -7,24 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/addToDbBtn"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/addNote"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.474"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:text="@string/addNote" />
-
     <ListView
         android:id="@+id/viewList"
         android:layout_width="0dp"
@@ -41,33 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.026" />
-
-    <Button
-        android:id="@+id/removeAllBtn"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/removeAllNotes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.942"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/removeCheckedBtn"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/removeChecked"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier2"

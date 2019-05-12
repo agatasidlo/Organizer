@@ -10,6 +10,8 @@
     <string name="Plan_zajec">Schedule</string>
     <string name="addNoteCalendar">Add note</string>
     <string name="noteReq">Note is required!</string>
+    <string name="addSubject">Add new subject</string>
+    <string name="removeAllSubjects">Remove all subjects</string>
 
     <string-array name="days_array">
         <item>Monday</item>

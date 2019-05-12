@@ -66,6 +66,7 @@ public class AddToListActivity extends AppCompatActivity {
 
                     //back to the list
                     finish();
+
                 }
             }
         });

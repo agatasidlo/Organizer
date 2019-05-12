@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -31,8 +33,6 @@ import java.util.HashMap;
 
 public class ListActivity extends AppCompatActivity {
 
-    private Button addToDbBtn;
-    private Button removeBtn;
     private DatabaseReference listDataBase;
     private ListView viewList;
     private ArrayList<String> keysList = new ArrayList<>();
@@ -41,6 +41,46 @@ public class ListActivity extends AppCompatActivity {
     private static ArrayList<String> statusList = new ArrayList<>();
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.addNoteId){
+            Intent intent = new Intent(ListActivity.this, AddToListActivity.class);
+            startActivity(intent);
+
+        }
+        else if(item.getItemId() == R.id.removeAllNotesId){
+            AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
+                    .setTitle("Are you sure?")
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeAll();
+                        }
+                    })
+                    .setNegativeButton("No", null).create();
+            dialogShowItem.show();
+            
+        }
+        else if(item.getItemId() == R.id.removeCheckedId){
+            AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
+                    .setTitle("Are you sure?")
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeChecked();
+                        }
+                    })
+                    .setNegativeButton("No", null).create();
+            dialogShowItem.show();
+        }
+        else return super.onOptionsItemSelected(item);
+        return true;
+    }
+
 
 
     @Override
@@ -48,56 +88,6 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         listDataBase = FirebaseDatabase.getInstance().getReference().child("List");
-
-//  ---------------------- add button -----------------------
-        addToDbBtn = (Button) findViewById(R.id.addToDbBtn);
-        addToDbBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //open form
-                Intent intent = new Intent(ListActivity.this, AddToListActivity.class);
-                startActivity(intent);
-
-            }
-
-        });
-
-        //  ---------------------- remove all button -----------------------
-        removeBtn = (Button) findViewById(R.id.removeAllBtn);
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                statusList = CustomListAdapter.getStatusArray();// ?
-                AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
-                        .setTitle("Are you sure?")
-                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                removeAll();
-                            }
-                        })
-                        .setNegativeButton("No", null).create();
-                dialogShowItem.show();
-            }
-
-        });
-
-        //  ---------------------- remove checked button -----------------------
-        removeBtn = (Button) findViewById(R.id.removeCheckedBtn);
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
-                        .setTitle("Are you sure?")
-                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                removeChecked();
-                            }
-                        })
-                        .setNegativeButton("No", null).create();
-                dialogShowItem.show();
-            }
-
-        });
 
 // ------------------------- list --------------------------
 

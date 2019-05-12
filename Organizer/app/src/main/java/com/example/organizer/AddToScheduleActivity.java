@@ -1,5 +1,6 @@
 package com.example.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -63,11 +64,11 @@ public class AddToScheduleActivity extends AppCompatActivity {
                 } else {
 
                     //add to db
-                    HashMap<String, String> dataMap = new HashMap<>();
+                    HashMap<String, Object> dataMap = new HashMap<>();
                     dataMap.put("Name", taskName);
                     dataMap.put("Description", taskDescp);
-                    dataMap.put("From", timeFrom);
-                    dataMap.put("To", timeTo);
+                    dataMap.put("From", changeTimeToInt(timeFrom));
+                    dataMap.put("To", changeTimeToInt(timeTo));
                     scheduleDataBase.child(weekDay).push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -82,9 +83,23 @@ public class AddToScheduleActivity extends AppCompatActivity {
                     });
 
                     finish();
+                    Intent intent = new Intent(AddToScheduleActivity.this, ScheduleSubjectListActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("day",weekDay);
+                    intent.putExtras(b);
+                    finish();
+                    startActivity(intent);
 
                 }
             }
         });
+    }
+
+    public int changeTimeToInt(String time){
+        int newTime;
+        String newTimeStr;
+        newTimeStr = time.substring(0,2)+time.substring(3,5);
+        newTime=Integer.parseInt(newTimeStr);
+        return newTime;
     }
 }

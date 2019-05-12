@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToScheduleActivity() {
 
-        Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
-
+        Intent intent = new Intent(MainActivity.this, ScheduleSubjectListActivity.class);
+        Bundle b = new Bundle();
+        b.putString("day","Monday");
+        intent.putExtras(b);
         startActivity(intent);
 
     }

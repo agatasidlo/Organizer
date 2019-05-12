@@ -206,7 +206,7 @@ public class CalendarActivity extends AppCompatActivity {
                                     });
                                 }
                             }
-                            });
+                        });
                     }
                 });
                 dialogShowItem.show();
@@ -357,8 +357,8 @@ public class CalendarActivity extends AppCompatActivity {
                 }
 
 
-                    if (ifDelete)
-                        calendar.removeEvents(date);
+                if (ifDelete)
+                    calendar.removeEvents(date);
 
                 keysArray.remove(index);
                 notesArray.remove(index);
@@ -367,15 +367,6 @@ public class CalendarActivity extends AppCompatActivity {
                 yearsArray.remove(index);
                 setVisible();
                 adapter.notifyDataSetChanged();
-
-                //blad przy usuwaniu jednego eventu z wielu w ciagu dnia
-               /* Date date = new GregorianCalendar(Integer.parseInt(yearData), Integer.parseInt(monthData)-1, Integer.parseInt(dayData)).getTime();
-                List<Event> eventsList = calendar.getEvents(date);
-                for(Event e: eventsList){
-                    if(key.equals(e.getData())){
-                        calendar.removeEvent(e);
-                    }
-                }*/
             }
 
             @Override
