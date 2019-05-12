@@ -56,25 +56,25 @@ public class ListActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.removeAllNotesId){
             AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
-                    .setTitle("Are you sure?")
-                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    .setTitle("Czy jesteś pewien?")
+                    .setPositiveButton("Tak",new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             removeAll();
                         }
                     })
-                    .setNegativeButton("No", null).create();
+                    .setNegativeButton("Nie", null).create();
             dialogShowItem.show();
             
         }
         else if(item.getItemId() == R.id.removeCheckedId){
             AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
-                    .setTitle("Are you sure?")
-                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    .setTitle("Czy jesteś pewien?")
+                    .setPositiveButton("Tak",new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             removeChecked();
                         }
                     })
-                    .setNegativeButton("No", null).create();
+                    .setNegativeButton("Nie", null).create();
             dialogShowItem.show();
         }
         else return super.onOptionsItemSelected(item);
@@ -113,13 +113,13 @@ public class ListActivity extends AppCompatActivity {
                 final AlertDialog dialogShowItem = new AlertDialog.Builder(ListActivity.this)
                         .setTitle(notesList.get(position)).setView(editText)
                         .setView(ll)
-                        .setNeutralButton("Save",null)
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Zapisz",null)
+                        .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {                // delete button
                                 listDataBase.child(keysList.get(position)).getRef().removeValue();
                             }
-                        }).setNegativeButton("Close", null)
+                        }).setNegativeButton("Zamknij", null)
                         .create();
                 dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
                                                      @Override
@@ -130,7 +130,7 @@ public class ListActivity extends AppCompatActivity {
                                                              public void onClick(View v) {
                                                                  String task = editText.getText().toString();
                                                                  if (task.equals("")) {
-                                                                     editText.setHint("Task is required!");
+                                                                     editText.setHint("Zadanie jest wymagane!");
                                                                      editText.setHintTextColor(Color.RED);
                                                                      dialogShowItem.show();
 
@@ -138,7 +138,7 @@ public class ListActivity extends AppCompatActivity {
                                                                      dialog.cancel();
                                                                      listDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
                                                                      listDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
-                                                                     listDataBase.child(keysList.get(position)).child("Status").getRef().setValue("Not done");
+                                                                     //listDataBase.child(keysList.get(position)).child("Status").getRef().setValue("Not done");
                                                                  }
                                                              }
                                                          });

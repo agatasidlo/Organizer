@@ -66,18 +66,46 @@ public class CalendarActivity extends AppCompatActivity {
         //display current date
         dataView = (TextView) findViewById(R.id.dataTextId);
         Date currentTime = Calendar.getInstance().getTime();
+        String currentDatePl="";
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(currentTime);
-        dataView.setText(currentDate);
+
+        if (currentDate.contains("Monday")) currentDatePl = currentDatePl.concat("Poniedziałek, ");
+        else if (currentDate.contains("Tuesday")) currentDatePl = currentDatePl.concat("Wtorek, ");
+        else if (currentDate.contains("Wednesday")) currentDatePl = currentDatePl.concat("Środa, ");
+        else if (currentDate.contains("Thursday")) currentDatePl = currentDatePl.concat("Czwartek, ");
+        else if (currentDate.contains("Friday")) currentDatePl = currentDatePl.concat("Piątek, ");
+        else if (currentDate.contains("Saturday")) currentDatePl = currentDatePl.concat("Sobota, ");
+        else if (currentDate.contains("Sunday")) currentDatePl = currentDatePl.concat("Niedziela, ");
+
+        if (currentDate.contains("January")) currentDatePl = currentDatePl.concat("Styczeń ");
+        else if (currentDate.contains("February")) currentDatePl = currentDatePl.concat("Luty ");
+        else if (currentDate.contains("March")) currentDatePl = currentDatePl.concat("Marzec ");
+        else if (currentDate.contains("April")) currentDatePl = currentDatePl.concat("Kwiecień ");
+        else if (currentDate.contains("May")) currentDatePl = currentDatePl.concat("Maj ");
+        else if (currentDate.contains("June")) currentDatePl = currentDatePl.concat("Czerwiec ");
+        else if (currentDate.contains("July")) currentDatePl = currentDatePl.concat("Lipiec ");
+        else if (currentDate.contains("August")) currentDatePl = currentDatePl.concat("Sierpień ");
+        else if (currentDate.contains("September")) currentDatePl = currentDatePl.concat("Wrzesień ");
+        else if (currentDate.contains("October")) currentDatePl = currentDatePl.concat("Październik ");
+        else if (currentDate.contains("November")) currentDatePl = currentDatePl.concat("Listopad ");
+        else if (currentDate.contains("December")) currentDatePl = currentDatePl.concat("Grudzień ");
+
+        currentDatePl = currentDatePl.concat(currentDate.substring(currentDate.length()-8));
+        dataView.setText(currentDatePl);
 
         //display current month
         monthView = (TextView) findViewById(R.id.monthViewId);
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentTime);
         final int month = cal.get(Calendar.MONTH);
-        String[] monthTab = {"January", "February",
+        /*String[] monthTab = {"January", "February",
                 "March", "April", "May", "June", "July",
                 "August", "September", "October", "November",
-                "December"};
+                "December"};*/
+        String[] monthTab = {"Styczeń","Luty",
+                "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec",
+                "Sierpień", "Wrzesień", "Październik", "Listopad",
+                "Grudzień"};
         String monthTxt = monthTab[month];
         monthView.setText(monthTxt);
 
@@ -108,10 +136,14 @@ public class CalendarActivity extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(firstDayOfNewMonth);
                 final int month = cal.get(Calendar.MONTH);
-                String[] monthTab = {"January","February",
+                /*String[] monthTab = {"January","February",
                         "March", "April", "May", "June", "July",
                         "August", "September", "October", "November",
-                        "December"};
+                        "December"};*/
+                String[] monthTab = {"Styczeń","Luty",
+                        "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec",
+                        "Sierpień", "Wrzesień", "Październik", "Listopad",
+                        "Grudzień"};
                 String monthTxt = monthTab[month];
                 monthView.setText(monthTxt);
 
@@ -134,9 +166,9 @@ public class CalendarActivity extends AppCompatActivity {
                 final AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(date)
                         .setView(editText)
-                        .setMessage("Make a note!")
-                        .setPositiveButton("Add", null)
-                        .setNegativeButton("Close", null)
+                        .setMessage("Dodaj notatkę!")
+                        .setPositiveButton("Dodaj", null)
+                        .setNegativeButton("Zamknij", null)
                         .create();
                 dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
@@ -173,13 +205,13 @@ public class CalendarActivity extends AppCompatActivity {
                                 }
 
                                 if (note.equals("")) {
-                                    editText.setHint("Note is required!");
+                                    editText.setHint("Notatka jest wymagana!");
                                     editText.setHintTextColor(Color.RED);
                                     dialogShowItem.show();
 
                                 }else if(exists==true){
                                     editText.setText("");
-                                    editText.setHint("Note already exists!");
+                                    editText.setHint("Notatka już istnieje!");
                                     editText.setHintTextColor(Color.RED);
                                     dialogShowItem.show();
                                 }
@@ -197,9 +229,9 @@ public class CalendarActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             //check if stored correctly
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(CalendarActivity.this, "Added", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(CalendarActivity.this, "Dodano", Toast.LENGTH_LONG).show();
                                             } else {
-                                                Toast.makeText(CalendarActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(CalendarActivity.this, "Błąd", Toast.LENGTH_LONG).show();
 
                                             }
                                         }
@@ -224,15 +256,15 @@ public class CalendarActivity extends AppCompatActivity {
                 editText.setText(notesArrayVisible.get(position), TextView.BufferType.EDITABLE);
                 final AlertDialog dialogShowItem = new AlertDialog.Builder(CalendarActivity.this)
                         .setTitle(notesArrayVisible.get(position)).setView(editText)
-                        .setNeutralButton("Save", null)
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Zapisz", null)
+                        .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int newPosition = getPosition(position);
                                 calendarDataBase.child(keysArray.get(newPosition)).getRef().removeValue();
                             }
                         })
-                        .setNegativeButton("Close", null)
+                        .setNegativeButton("Zamknij", null)
                         .create();
 
                 dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -269,14 +301,14 @@ public class CalendarActivity extends AppCompatActivity {
                                 }
 
                                 if (note.equals("")) {
-                                    editText.setHint("Note is required!");
+                                    editText.setHint("Notatka jest wymagana!");
                                     editText.setHintTextColor(Color.RED);
                                     dialogShowItem.show();
 
                                 }
                                 else if(exists==true){
                                     editText.setText("");
-                                    editText.setHint("Note already exists!");
+                                    editText.setHint("Notatka już istnieje!");
                                     editText.setHintTextColor(Color.RED);
                                     dialogShowItem.show();
                                 }

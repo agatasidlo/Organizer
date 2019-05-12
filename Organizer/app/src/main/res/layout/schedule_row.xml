@@ -45,7 +45,7 @@ android:layout_height="wrap_content">
                 android:layout_marginStart="48dp"
                 android:layout_marginLeft="48dp"
                 android:layout_marginTop="4dp"
-                android:text="From:"
+                android:text="Od:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,7 +56,7 @@ android:layout_height="wrap_content">
                 android:layout_marginStart="192dp"
                 android:layout_marginLeft="192dp"
                 android:layout_marginTop="4dp"
-                android:text="To:"
+                android:text="Do:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

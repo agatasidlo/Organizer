@@ -56,9 +56,9 @@ public class AddToListActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             //check if stored correctly
                             if (task.isSuccessful()) {
-                                Toast.makeText(AddToListActivity.this, "Added", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddToListActivity.this, "Dodano", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(AddToListActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddToListActivity.this, "Błąd", Toast.LENGTH_LONG).show();
 
                             }
                         }

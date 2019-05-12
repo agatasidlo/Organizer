@@ -74,9 +74,9 @@ public class AddToScheduleActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             //check if stored correctly
                             if (task.isSuccessful()) {
-                                Toast.makeText(AddToScheduleActivity.this, "Added", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddToScheduleActivity.this, "Dodano", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(AddToScheduleActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddToScheduleActivity.this, "Błąd", Toast.LENGTH_LONG).show();
 
                             }
                         }

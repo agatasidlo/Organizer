@@ -1,3 +1,4 @@
+<!--
 <resources>
     <string name="app_name">Organizer</string>
     <string name="addNote">Add task</string>
@@ -21,5 +22,32 @@
         <item>Friday</item>
     </string-array>
     <string name="day">Choose day</string>
+
+</resources>
+    -->
+
+<resources>
+    <string name="app_name">Organizer</string>
+    <string name="addNote">Dodaj zadanie</string>
+    <string name="removeAllNotes">Usuń wszystko</string>
+    <string name="removeChecked">Usuń zaznaczone</string>
+    <string name="note">note1</string>
+    <string name="title_activity_list">Lista</string>
+    <string name="Lista">Lista zadań</string>
+    <string name="Kalendarz">Kalendarz</string>
+    <string name="Plan_zajec">Plan zajęć</string>
+    <string name="addNoteCalendar">Dodaj notatkę</string>
+    <string name="noteReq">Notatka jest wymagana!</string>
+    <string name="addSubject">Dodaj nowy przedmiot</string>
+    <string name="removeAllSubjects">Usuń wszystkie przedmioty</string>
+
+    <string-array name="days_array">
+        <item>Poniedziałek</item>
+        <item>Wtorek</item>
+        <item>Środa</item>
+        <item>Czwartek</item>
+        <item>Piątek</item>
+    </string-array>
+    <string name="day">Wybierz dzień</string>
 
 </resources>

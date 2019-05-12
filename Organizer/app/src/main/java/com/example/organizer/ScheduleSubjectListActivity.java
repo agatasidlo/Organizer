@@ -6,9 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.solver.widgets.ConstraintHorizontalLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,29 +19,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 public class ScheduleSubjectListActivity extends AppCompatActivity {
 
@@ -59,6 +42,7 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tablayout;
     private String chosenDay;
+    private String chosenDayEng;
 
 
     @Override
@@ -77,13 +61,13 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.removeId){
             AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
-                    .setTitle("Are you sure?")
-                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    .setTitle("Czy jesteś pewien?")
+                    .setPositiveButton("Tak",new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             removeAll();
                         }
                     })
-                    .setNegativeButton("No", null).create();
+                    .setNegativeButton("Nie", null).create();
             dialogShowItem.show();
 
         }
@@ -98,15 +82,33 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         if (b != null)
-            chosenDay = b.getString("day");
+            chosenDayEng = b.getString("day");
+        switch (chosenDayEng){
+            case "Monday":
+                chosenDay = "Poniedziałek";
+                break;
+            case "Tuesday":
+                chosenDay = "Wtorek";
+                break;
+            case "Wednesday":
+                chosenDay = "Środa";
+                break;
+            case "Thursday":
+                chosenDay = "Czwartek";
+                break;
+            case "Friday":
+                chosenDay = "Piątek";
+                break;
+        }
 
-        scheduleDataBase = FirebaseDatabase.getInstance().getReference().child("Schedule").child(chosenDay);
+
+        scheduleDataBase = FirebaseDatabase.getInstance().getReference().child("Schedule").child(chosenDayEng);
         dayNameTextView = (TextView) findViewById(R.id.dayNameID);
         dayName = dayNameTextView.getText().toString().trim();
         dayNameTextView.setText(chosenDay);
         tablayout = findViewById(R.id.tabId);
         int tabIndex=0;
-        switch (chosenDay){
+        switch (chosenDayEng){
             case "Monday":
                 tabIndex = 0;
                 break;
@@ -134,25 +136,25 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 String day = tab.getText().toString();
                 switch (day){
-                    case "Mon":
-                        chosenDay = "Monday";
+                    case "Pon":
+                        chosenDayEng = "Monday";
                         break;
-                    case "Tue":
-                        chosenDay = "Tuesday";
+                    case "Wt":
+                        chosenDayEng = "Tuesday";
                         break;
-                    case "Wed":
-                        chosenDay = "Wednesday";
+                    case "Śr":
+                        chosenDayEng = "Wednesday";
                         break;
-                    case "Thu":
-                        chosenDay = "Thursday";
+                    case "Czw":
+                        chosenDayEng = "Thursday";
                         break;
-                    case "Fri":
-                        chosenDay = "Friday";
+                    case "Pt":
+                        chosenDayEng = "Friday";
                         break;
                 }
                 Intent intent = new Intent(ScheduleSubjectListActivity.this, ScheduleSubjectListActivity.class);
                 Bundle b = new Bundle();
-                b.putString("day",chosenDay);
+                b.putString("day",chosenDayEng);
                 intent.putExtras(b);
                 finish();
                 startActivity(intent);
@@ -191,13 +193,13 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                 final AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
                         .setTitle(subjectArray.get(position)).setView(editText)
                         .setView(ll)
-                        .setNeutralButton("Save", null)
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Zapisz", null)
+                        .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 scheduleDataBase.child(keysList.get(position)).getRef().removeValue();
                             }
-                        }).setNegativeButton("Close", null)
+                        }).setNegativeButton("Zamknij", null)
                         .create();
                 dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
                                                      @Override
@@ -211,17 +213,17 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                                                                  String timeTo = editToTime.getText().toString();
                                                                  if (name.equals("") || timeFrom.equals("") || timeTo.equals("")) {
                                                                      if (name.equals("")) {
-                                                                         editText.setHint("Name is required!");
+                                                                         editText.setHint("Nazwa jest wymagana!");
                                                                          editText.setHintTextColor(Color.RED);
                                                                          dialogShowItem.show();
                                                                      }
                                                                      if (timeFrom.equals("")) {
-                                                                         editFromTime.setHint("Time is required!");
+                                                                         editFromTime.setHint("Czas jest wymagany!");
                                                                          editFromTime.setHintTextColor(Color.RED);
                                                                          dialogShowItem.show();
                                                                      }
                                                                      if (timeFrom.equals("")) {
-                                                                         editToTime.setHint("Time is required!");
+                                                                         editToTime.setHint("Czas jest wymagany!");
                                                                          editToTime.setHintTextColor(Color.RED);
                                                                          dialogShowItem.show();
                                                                      }
