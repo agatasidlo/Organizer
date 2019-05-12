@@ -38,13 +38,13 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Od"
-        android:inputType="time"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.549" />
+        app:layout_constraintVertical_bias="0.544" />
 
     <EditText
         android:id="@+id/toId"
@@ -58,13 +58,13 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Do"
-        android:inputType="time"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.547" />
+        app:layout_constraintVertical_bias="0.627" />
 
     <TextView
         android:id="@+id/textView4"
@@ -117,13 +117,13 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.819" />
+        app:layout_constraintVertical_bias="0.925" />
 
     <Spinner
         android:id="@+id/weekDayId"
         android:layout_width="270dp"
         android:layout_height="30dp"
-        android:layout_marginTop="364dp"
+        android:layout_marginTop="428dp"
         android:entries="@array/days_array"
         android:prompt="@string/day"
         app:layout_constraintEnd_toEndOf="parent"
@@ -148,12 +148,34 @@
         android:id="@+id/timeReqId"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="343dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginLeft="68dp"
+        android:layout_marginTop="392dp"
         android:text="Czas jest wymagany!"
         android:textColor="#FF0000"
         android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addFromBtn"
+        android:layout_width="122dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="212dp"
+        android:layout_marginLeft="212dp"
+        android:layout_marginTop="298dp"
+        android:text="+"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addToBtn"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="212dp"
+        android:layout_marginLeft="212dp"
+        android:layout_marginTop="344dp"
+        android:text="+"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
