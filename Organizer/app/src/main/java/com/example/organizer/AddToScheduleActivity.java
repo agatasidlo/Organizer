@@ -106,6 +106,15 @@ public class AddToScheduleActivity extends AppCompatActivity {
                 String timeFrom = fromTxt.getText().toString().trim();
                 String timeTo = toTxt.getText().toString().trim();
                 String weekDay = daySpinner.getSelectedItem().toString();
+                String weekDayEng;
+
+                switch (weekDay) {
+                    case "Poniedziałek": weekDayEng = "Monday"; break;
+                    case "Wtorek": weekDayEng = "Tuesday"; break;
+                    case "Środa": weekDayEng = "Wednesday"; break;
+                    case "Czwartek": weekDayEng = "Thursday"; break;
+                    default: weekDayEng = "Friday"; break;
+                }
 
                 if (taskName.equals("") || timeFrom.equals("") || timeTo.equals("")) {
                     if (taskName.equals("")) nameReq.setVisibility(View.VISIBLE);
@@ -119,7 +128,8 @@ public class AddToScheduleActivity extends AppCompatActivity {
                     dataMap.put("Description", taskDescp);
                     dataMap.put("From", changeTimeToInt(timeFrom));
                     dataMap.put("To", changeTimeToInt(timeTo));
-                    scheduleDataBase.child(weekDay).push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    scheduleDataBase.child(weekDayEng).push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             //check if stored correctly
@@ -135,7 +145,7 @@ public class AddToScheduleActivity extends AppCompatActivity {
                     finish();
                     Intent intent = new Intent(AddToScheduleActivity.this, ScheduleSubjectListActivity.class);
                     Bundle b = new Bundle();
-                    b.putString("day",weekDay);
+                    b.putString("day",weekDayEng);
                     intent.putExtras(b);
                     finish();
                     startActivity(intent);
