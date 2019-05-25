@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,12 +20,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,7 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     private TabLayout tablayout;
     private String chosenDay;
     private String chosenDayEng;
+    public boolean result;
 
 
     @Override
@@ -56,6 +60,9 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.addId){
             finish();
             Intent intent = new Intent(ScheduleSubjectListActivity.this, AddToScheduleActivity.class);
+            Bundle b = new Bundle();
+            b.putString("day",chosenDayEng);
+            intent.putExtras(b);
             startActivity(intent);
 
         }
@@ -211,7 +218,8 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                                                                  String name = editText.getText().toString();
                                                                  String timeFrom = editFromTime.getText().toString();
                                                                  String timeTo = editToTime.getText().toString();
-                                                                 if (name.equals("") || timeFrom.equals("") || timeTo.equals("")) {
+                                                                 boolean timeSlots = checkTimeSlots(changeTimeToInt(timeFrom), changeTimeToInt(timeTo), chosenDayEng);
+                                                                 if (name.equals("") || timeFrom.equals("") || timeTo.equals("") || !timeSlots) {
                                                                      if (name.equals("")) {
                                                                          editText.setHint("Nazwa jest wymagana!");
                                                                          editText.setHintTextColor(Color.RED);
@@ -222,8 +230,16 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                                                                          editFromTime.setHintTextColor(Color.RED);
                                                                          dialogShowItem.show();
                                                                      }
-                                                                     if (timeFrom.equals("")) {
+                                                                     if (timeTo.equals("")) {
                                                                          editToTime.setHint("Czas jest wymagany!");
+                                                                         editToTime.setHintTextColor(Color.RED);
+                                                                         dialogShowItem.show();
+                                                                     }
+                                                                     if(!timeSlots){
+                                                                         editFromTime.setHint("Nieprawidłowy czas!");
+                                                                         editFromTime.setHintTextColor(Color.RED);
+                                                                         dialogShowItem.show();
+                                                                         editToTime.setHint("Nieprawidłowy czas!");
                                                                          editToTime.setHintTextColor(Color.RED);
                                                                          dialogShowItem.show();
                                                                      }
@@ -321,5 +337,26 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     public void removeAll(){
         DatabaseReference dataBase = FirebaseDatabase.getInstance().getReference();
         dataBase.child("Schedule").removeValue();
+    }
+
+    public boolean checkTimeSlots(final int timeFrom, final int timeTo, String chosenDay){
+        result = true;
+        if(timeFrom>=timeTo) return false;
+        //problem z wczytywaniem danych z bazy
+        scheduleDataBase.child(chosenDay).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    int timeFromDb = snapshot.child("From").getValue(Integer.class);
+                    int timeToDb = snapshot.child("To").getValue(Integer.class);
+                    Toast.makeText(ScheduleSubjectListActivity.this, "Tu", Toast.LENGTH_LONG).show();
+                    if(!(timeTo <= timeFromDb || timeFrom >= timeToDb)) result = false;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return result;
     }
 }

@@ -4,7 +4,9 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,11 +18,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import static java.util.logging.Logger.global;
 
 public class AddToScheduleActivity extends AppCompatActivity {
 
@@ -33,6 +42,20 @@ public class AddToScheduleActivity extends AppCompatActivity {
     private TextView timeReq;
     private Spinner daySpinner;
     private DatabaseReference scheduleDataBase;
+    public boolean result;
+    //if back button clicked return to previous day
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(AddToScheduleActivity.this, ScheduleSubjectListActivity.class);
+            intent.putExtras(getIntent().getExtras());
+            finish();
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 
 
     @Override
@@ -116,10 +139,12 @@ public class AddToScheduleActivity extends AppCompatActivity {
                     default: weekDayEng = "Friday"; break;
                 }
 
-                if (taskName.equals("") || timeFrom.equals("") || timeTo.equals("")) {
+                boolean timeSlots = checkTimeSlots(changeTimeToInt(timeFrom), changeTimeToInt(timeTo), weekDayEng);
+                if (taskName.equals("") || timeFrom.equals("") || timeTo.equals("") || !timeSlots) {
                     if (taskName.equals("")) nameReq.setVisibility(View.VISIBLE);
                     if (timeFrom.equals("")) timeReq.setVisibility(View.VISIBLE);
                     if (timeTo.equals("")) timeReq.setVisibility(View.VISIBLE);
+                    if (!timeSlots) {timeReq.setVisibility(View.VISIBLE); timeReq.setText("Nieprawidłowy czas!");}
                 } else {
 
                     //add to db
@@ -153,6 +178,8 @@ public class AddToScheduleActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     public int changeTimeToInt(String time){
@@ -161,5 +188,25 @@ public class AddToScheduleActivity extends AppCompatActivity {
         newTimeStr = time.substring(0,2)+time.substring(3,5);
         newTime=Integer.parseInt(newTimeStr);
         return newTime;
+    }
+
+    public boolean checkTimeSlots(final int timeFrom, final int timeTo, String chosenDay){
+        result = true;
+        if(timeFrom>=timeTo) return false;
+        //problem z wczytywaniem danych z bazy
+        scheduleDataBase.child(chosenDay).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    int timeFromDb = snapshot.child("From").getValue(Integer.class);
+                    int timeToDb = snapshot.child("To").getValue(Integer.class);
+                    if(!(timeTo <= timeFromDb || timeFrom >= timeToDb)) result = false;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return result;
     }
 }
