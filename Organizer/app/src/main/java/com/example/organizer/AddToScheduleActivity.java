@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -42,7 +43,8 @@ public class AddToScheduleActivity extends AppCompatActivity {
     private TextView timeReq;
     private Spinner daySpinner;
     private DatabaseReference scheduleDataBase;
-    public boolean result;
+    private boolean timeSlotsResult;
+
     //if back button clicked return to previous day
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -74,6 +76,7 @@ public class AddToScheduleActivity extends AppCompatActivity {
         addFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeSlotsResult = true;
                 Calendar mcurrentTime = Calendar.getInstance();
                 final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 final int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -95,8 +98,10 @@ public class AddToScheduleActivity extends AppCompatActivity {
         toTxt.setKeyListener(null);
         Button addTo = findViewById(R.id.addToBtn);
         addTo.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                timeSlotsResult = true;
                 Calendar mcurrentTime = Calendar.getInstance();
                 final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 final int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -124,12 +129,12 @@ public class AddToScheduleActivity extends AppCompatActivity {
                 nameTxt = (EditText) findViewById(R.id.txtNameId);
                 descpTxt = (EditText) findViewById(R.id.txtDescpId);
                 daySpinner = (Spinner) findViewById(R.id.weekDayId);
-                String taskName = nameTxt.getText().toString().trim();
-                String taskDescp = descpTxt.getText().toString().trim();
-                String timeFrom = fromTxt.getText().toString().trim();
-                String timeTo = toTxt.getText().toString().trim();
+                final String taskName = nameTxt.getText().toString().trim();
+                final String taskDescp = descpTxt.getText().toString().trim();
+                final String timeFrom = fromTxt.getText().toString().trim();
+                final String timeTo = toTxt.getText().toString().trim();
                 String weekDay = daySpinner.getSelectedItem().toString();
-                String weekDayEng;
+                final String weekDayEng;
 
                 switch (weekDay) {
                     case "Poniedziałek": weekDayEng = "Monday"; break;
@@ -139,43 +144,71 @@ public class AddToScheduleActivity extends AppCompatActivity {
                     default: weekDayEng = "Friday"; break;
                 }
 
-                boolean timeSlots = checkTimeSlots(changeTimeToInt(timeFrom), changeTimeToInt(timeTo), weekDayEng);
-                if (taskName.equals("") || timeFrom.equals("") || timeTo.equals("") || !timeSlots) {
-                    if (taskName.equals("")) nameReq.setVisibility(View.VISIBLE);
-                    if (timeFrom.equals("")) timeReq.setVisibility(View.VISIBLE);
-                    if (timeTo.equals("")) timeReq.setVisibility(View.VISIBLE);
-                    if (!timeSlots) {timeReq.setVisibility(View.VISIBLE); timeReq.setText("Nieprawidłowy czas!");}
-                } else {
+                scheduleDataBase.child(weekDayEng).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        timeSlotsResult=true;
+                        if (taskName.equals("") || timeFrom.equals("") || timeTo.equals("")) {
+                            if (taskName.equals("")) nameReq.setVisibility(View.VISIBLE);
+                            if (timeFrom.equals("") || timeTo.equals("")) timeReq.setVisibility(View.VISIBLE);
+                        } else {
+                                if(changeTimeToInt(timeFrom)>=changeTimeToInt(timeTo)) timeSlotsResult = false;
+                                else {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        int timeFromDb = snapshot.child("From").getValue(Integer.class);
+                                        int timeToDb = snapshot.child("To").getValue(Integer.class);
+                                        if (!(changeTimeToInt(timeTo) <= timeFromDb || changeTimeToInt(timeFrom) >= timeToDb))
+                                            timeSlotsResult = false;
+                                    }
+                                }
 
-                    //add to db
-                    HashMap<String, Object> dataMap = new HashMap<>();
-                    dataMap.put("Name", taskName);
-                    dataMap.put("Description", taskDescp);
-                    dataMap.put("From", changeTimeToInt(timeFrom));
-                    dataMap.put("To", changeTimeToInt(timeTo));
+                               if (!timeSlotsResult) {
+                                    timeReq.setVisibility(View.VISIBLE);
+                                    timeReq.setText("Nieprawidłowy czas!");
 
-                    scheduleDataBase.child(weekDayEng).push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            //check if stored correctly
-                            if (task.isSuccessful()) {
-                                Toast.makeText(AddToScheduleActivity.this, "Dodano", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(AddToScheduleActivity.this, "Błąd", Toast.LENGTH_LONG).show();
+                               }
+                                else{
+
+                                //add to db
+                                HashMap<String, Object> dataMap = new HashMap<>();
+                                dataMap.put("Name", taskName);
+                                dataMap.put("Description", taskDescp);
+                                dataMap.put("From", changeTimeToInt(timeFrom));
+                                dataMap.put("To", changeTimeToInt(timeTo));
+
+                                scheduleDataBase.child(weekDayEng).push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        //check if stored correctly
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(AddToScheduleActivity.this, "Dodano", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(AddToScheduleActivity.this, "Błąd", Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
+
+                                finish();
+                                Intent intent = new Intent(AddToScheduleActivity.this, ScheduleSubjectListActivity.class);
+                                Bundle b = new Bundle();
+                                b.putString("day", weekDayEng);
+                                intent.putExtras(b);
+                                finish();
+                                startActivity(intent);
 
                             }
                         }
-                    });
 
-                    finish();
-                    Intent intent = new Intent(AddToScheduleActivity.this, ScheduleSubjectListActivity.class);
-                    Bundle b = new Bundle();
-                    b.putString("day",weekDayEng);
-                    intent.putExtras(b);
-                    finish();
-                    startActivity(intent);
+                    }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
         });
 
@@ -190,23 +223,5 @@ public class AddToScheduleActivity extends AppCompatActivity {
         return newTime;
     }
 
-    public boolean checkTimeSlots(final int timeFrom, final int timeTo, String chosenDay){
-        result = true;
-        if(timeFrom>=timeTo) return false;
-        //problem z wczytywaniem danych z bazy
-        scheduleDataBase.child(chosenDay).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    int timeFromDb = snapshot.child("From").getValue(Integer.class);
-                    int timeToDb = snapshot.child("To").getValue(Integer.class);
-                    if(!(timeTo <= timeFromDb || timeFrom >= timeToDb)) result = false;
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return result;
-    }
+
 }

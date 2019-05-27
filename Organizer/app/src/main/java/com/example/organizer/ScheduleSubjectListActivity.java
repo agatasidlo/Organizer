@@ -1,16 +1,19 @@
 package com.example.organizer;
 
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.solver.widgets.ConstraintHorizontalLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -30,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ScheduleSubjectListActivity extends AppCompatActivity {
 
@@ -42,11 +47,10 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     private ArrayList<String> toArray = new ArrayList<>();
     private ArrayList<String> keysList = new ArrayList<>();
     private DatabaseReference scheduleDataBase;
-    private Toolbar toolbar;
     private TabLayout tablayout;
     private String chosenDay;
     private String chosenDayEng;
-    public boolean result;
+    private boolean timeSlotsResult;
 
 
     @Override
@@ -185,18 +189,33 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final EditText editText = new EditText(ScheduleSubjectListActivity.this);
                 final EditText editDescp = new EditText(ScheduleSubjectListActivity.this);
-                final EditText editFromTime = new EditText(ScheduleSubjectListActivity.this);
-                final EditText editToTime = new EditText(ScheduleSubjectListActivity.this);
+                final TextView fromTimeText = new TextView(ScheduleSubjectListActivity.this);
+                final TextView editFromTime = new TextView(ScheduleSubjectListActivity.this);
+                final TextView toTimeText = new TextView(ScheduleSubjectListActivity.this);
+                final TextView editToTime = new TextView(ScheduleSubjectListActivity.this);
+                final TextView textWarning = new TextView(ScheduleSubjectListActivity.this);
                 editText.setText(subjectArray.get(position), TextView.BufferType.EDITABLE);
                 editDescp.setText(descpArray.get(position), TextView.BufferType.EDITABLE);
+                fromTimeText.setText("Od:   ", TextView.BufferType.NORMAL);
+                fromTimeText.setTextSize(25);
                 editFromTime.setText(fromArray.get(position), TextView.BufferType.EDITABLE);
+                editFromTime.setTextSize(25);
+                toTimeText.setText("   Do:   ", TextView.BufferType.NORMAL);
+                toTimeText.setTextSize(25);
                 editToTime.setText(toArray.get(position), TextView.BufferType.EDITABLE);
+                editToTime.setTextSize(25);
                 LinearLayout ll=new LinearLayout(ScheduleSubjectListActivity.this);
+                LinearLayout hl=new LinearLayout(ScheduleSubjectListActivity.this);
                 ll.setOrientation(LinearLayout.VERTICAL);
+                hl.setOrientation(LinearLayout.HORIZONTAL);
                 ll.addView(editText);
                 ll.addView(editDescp);
-                ll.addView(editFromTime);
-                ll.addView(editToTime);
+                hl.addView(fromTimeText);
+                hl.addView(editFromTime);
+                hl.addView(toTimeText);
+                hl.addView(editToTime);
+                ll.addView(hl);
+                ll.addView(textWarning);
                 final AlertDialog dialogShowItem = new AlertDialog.Builder(ScheduleSubjectListActivity.this)
                         .setTitle(subjectArray.get(position)).setView(editText)
                         .setView(ll)
@@ -208,6 +227,49 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                             }
                         }).setNegativeButton("Zamknij", null)
                         .create();
+
+                editFromTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentTime = Calendar.getInstance();
+                        final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        final int minute = mcurrentTime.get(Calendar.MINUTE);
+                        TimePickerDialog mTimePicker;
+                        mTimePicker = new TimePickerDialog(ScheduleSubjectListActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                String hourStr = Integer.toString(selectedHour);
+                                String minuteStr = Integer.toString(selectedMinute);
+                                if (selectedHour<10) hourStr="0"+hourStr;
+                                if (selectedMinute<10) minuteStr = "0"+minuteStr;
+                                editFromTime.setText(hourStr + ":" + minuteStr);
+                            }
+                        }, hour+2, minute, true);
+                        mTimePicker.show();
+                    }
+                });
+
+                editToTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentTime = Calendar.getInstance();
+                        final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        final int minute = mcurrentTime.get(Calendar.MINUTE);
+                        TimePickerDialog mTimePicker;
+                        mTimePicker = new TimePickerDialog(ScheduleSubjectListActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                String hourStr = Integer.toString(selectedHour);
+                                String minuteStr = Integer.toString(selectedMinute);
+                                if (selectedHour<10) hourStr="0"+hourStr;
+                                if (selectedMinute<10) minuteStr = "0"+minuteStr;
+                                editToTime.setText(hourStr + ":" + minuteStr);
+                            }
+                        }, hour+2, minute, true);
+                        mTimePicker.show();
+                    }
+                });
+
                 dialogShowItem.setOnShowListener(new DialogInterface.OnShowListener() {
                                                      @Override
                                                      public void onShow(final DialogInterface dialog) {
@@ -215,44 +277,53 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
                                                          neuBtn.setOnClickListener(new View.OnClickListener() {
                                                              @Override
                                                              public void onClick(View v) {
-                                                                 String name = editText.getText().toString();
-                                                                 String timeFrom = editFromTime.getText().toString();
-                                                                 String timeTo = editToTime.getText().toString();
-                                                                 boolean timeSlots = checkTimeSlots(changeTimeToInt(timeFrom), changeTimeToInt(timeTo), chosenDayEng);
-                                                                 if (name.equals("") || timeFrom.equals("") || timeTo.equals("") || !timeSlots) {
-                                                                     if (name.equals("")) {
-                                                                         editText.setHint("Nazwa jest wymagana!");
-                                                                         editText.setHintTextColor(Color.RED);
-                                                                         dialogShowItem.show();
+                                                                 final String name = editText.getText().toString();
+                                                                 final String timeFrom = editFromTime.getText().toString();
+                                                                 final String timeTo = editToTime.getText().toString();
+
+                                                                 scheduleDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                     @Override
+                                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                         timeSlotsResult = true;
+                                                                         if(name.equals("")) {
+                                                                             editText.setHint("Nazwa jest wymagana!");
+                                                                             editText.setHintTextColor(Color.RED);
+                                                                             dialogShowItem.show();
+                                                                         }
+                                                                         else {
+                                                                             if (changeTimeToInt(timeFrom) >= changeTimeToInt(timeTo))
+                                                                                 timeSlotsResult = false;
+                                                                             else {
+                                                                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                                                     int timeFromDb = snapshot.child("From").getValue(Integer.class);
+                                                                                     int timeToDb = snapshot.child("To").getValue(Integer.class);
+                                                                                     if (!(changeTimeToInt(timeTo) <= timeFromDb || changeTimeToInt(timeFrom) >= timeToDb) && timeFromDb != changeTimeToInt(fromArray.get(position)) && timeToDb != changeTimeToInt(toArray.get(position)))
+                                                                                         timeSlotsResult = false;
+                                                                                 }
+                                                                             }
+
+                                                                             if (!timeSlotsResult) {
+                                                                                 textWarning.setText("Nieprawidłowy czas!");
+                                                                                 textWarning.setTextColor(Color.RED);
+                                                                                 dialogShowItem.show();
+                                                                             } else {
+                                                                                 dialog.cancel();
+                                                                                 scheduleDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
+                                                                                 scheduleDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
+                                                                                 scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(changeTimeToInt(editFromTime.getText().toString()));
+                                                                                 scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(changeTimeToInt(editToTime.getText().toString()));
+                                                                                 //reload activity to get proper ordered view:
+                                                                                 finish();
+                                                                                 startActivity(getIntent());
+                                                                             }
+                                                                         }
                                                                      }
-                                                                     if (timeFrom.equals("")) {
-                                                                         editFromTime.setHint("Czas jest wymagany!");
-                                                                         editFromTime.setHintTextColor(Color.RED);
-                                                                         dialogShowItem.show();
+
+                                                                     @Override
+                                                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                                      }
-                                                                     if (timeTo.equals("")) {
-                                                                         editToTime.setHint("Czas jest wymagany!");
-                                                                         editToTime.setHintTextColor(Color.RED);
-                                                                         dialogShowItem.show();
-                                                                     }
-                                                                     if(!timeSlots){
-                                                                         editFromTime.setHint("Nieprawidłowy czas!");
-                                                                         editFromTime.setHintTextColor(Color.RED);
-                                                                         dialogShowItem.show();
-                                                                         editToTime.setHint("Nieprawidłowy czas!");
-                                                                         editToTime.setHintTextColor(Color.RED);
-                                                                         dialogShowItem.show();
-                                                                     }
-                                                                 } else {
-                                                                     dialog.cancel();
-                                                                     scheduleDataBase.child(keysList.get(position)).child("Name").getRef().setValue(editText.getText().toString());
-                                                                     scheduleDataBase.child(keysList.get(position)).child("Description").getRef().setValue(editDescp.getText().toString());
-                                                                     scheduleDataBase.child(keysList.get(position)).child("From").getRef().setValue(changeTimeToInt(editFromTime.getText().toString()));
-                                                                     scheduleDataBase.child(keysList.get(position)).child("To").getRef().setValue(changeTimeToInt(editToTime.getText().toString()));
-                                                                     //reload activity to get proper ordered view:
-                                                                     finish();
-                                                                     startActivity(getIntent());
-                                                                 }
+                                                                 });
 
                                                              }
                                                          });
@@ -321,7 +392,9 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
     public String changeTimeToString(int time){
         String newTime;
         newTime = Integer.toString(time);
-        if(newTime.length()==3) newTime = "0" + newTime;
+        if(newTime.length()==1) newTime = "000" + newTime;
+        else if(newTime.length()==2) newTime = "00" + newTime;
+        else if(newTime.length()==3) newTime = "0" + newTime;
         newTime = newTime.substring(0,2) + ":" + newTime.substring(2,4);
         return newTime;
     }
@@ -339,24 +412,4 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
         dataBase.child("Schedule").removeValue();
     }
 
-    public boolean checkTimeSlots(final int timeFrom, final int timeTo, String chosenDay){
-        result = true;
-        if(timeFrom>=timeTo) return false;
-        //problem z wczytywaniem danych z bazy
-        scheduleDataBase.child(chosenDay).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    int timeFromDb = snapshot.child("From").getValue(Integer.class);
-                    int timeToDb = snapshot.child("To").getValue(Integer.class);
-                    Toast.makeText(ScheduleSubjectListActivity.this, "Tu", Toast.LENGTH_LONG).show();
-                    if(!(timeTo <= timeFromDb || timeFrom >= timeToDb)) result = false;
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return result;
-    }
 }
