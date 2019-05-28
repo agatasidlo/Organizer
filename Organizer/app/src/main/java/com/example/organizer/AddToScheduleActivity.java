@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +45,8 @@ public class AddToScheduleActivity extends AppCompatActivity {
     private Spinner daySpinner;
     private DatabaseReference scheduleDataBase;
     private boolean timeSlotsResult;
+    private FirebaseAuth dataBaseAuth;
+    private String userId;
 
     //if back button clicked return to previous day
     @Override
@@ -64,7 +67,9 @@ public class AddToScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_schedule);
-        scheduleDataBase = FirebaseDatabase.getInstance().getReference().child("Schedule");
+        dataBaseAuth = FirebaseAuth.getInstance();
+        userId = dataBaseAuth.getCurrentUser().getUid();
+        scheduleDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("Schedule");
         nameReq = (TextView) findViewById(R.id.nameReqId);
         timeReq = (TextView) findViewById(R.id.timeReqId);
         fromTxt = (EditText) findViewById(R.id.fromId);

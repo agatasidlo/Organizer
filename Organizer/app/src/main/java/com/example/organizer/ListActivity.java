@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +40,8 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<String> notesList = new ArrayList<>();
     private ArrayList<String> descpList = new ArrayList<>();
     private static ArrayList<String> statusList = new ArrayList<>();
+    private FirebaseAuth dataBaseAuth;
+    private String userId;
 
 
     @Override
@@ -87,7 +90,9 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        listDataBase = FirebaseDatabase.getInstance().getReference().child("List");
+        dataBaseAuth = FirebaseAuth.getInstance();
+        userId = dataBaseAuth.getCurrentUser().getUid();
+        listDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("List");
 
 // ------------------------- list --------------------------
 
@@ -207,11 +212,11 @@ public class ListActivity extends AppCompatActivity {
 
     public void removeAll(){
         DatabaseReference dataBase = FirebaseDatabase.getInstance().getReference();
-        dataBase.child("List").removeValue();
+        dataBase.child(userId).child("List").removeValue();
     }
 
     public void removeChecked(){
-        FirebaseDatabase.getInstance().getReference().child("List")
+        FirebaseDatabase.getInstance().getReference().child(userId).child("List")
         .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

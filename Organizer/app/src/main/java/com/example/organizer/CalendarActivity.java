@@ -19,6 +19,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,6 +53,8 @@ public class CalendarActivity extends AppCompatActivity {
     private ArrayList<String> daysArrayVisible = new ArrayList<>();
     private ArrayList<String> monthsArrayVisible = new ArrayList<>();
     private ArrayList<String> yearArrayVisible = new ArrayList<>();
+    private FirebaseAuth dataBaseAuth;
+    private String userId;
 
 
 
@@ -60,7 +63,9 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        calendarDataBase = FirebaseDatabase.getInstance().getReference().child("Calendar");
+        dataBaseAuth = FirebaseAuth.getInstance();
+        userId = dataBaseAuth.getCurrentUser().getUid();
+        calendarDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("Calendar");
 
 
         //display current date

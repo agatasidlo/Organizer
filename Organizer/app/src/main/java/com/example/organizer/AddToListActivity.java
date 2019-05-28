@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,13 +24,17 @@ public class AddToListActivity extends AppCompatActivity {
     private EditText descpTxt;
     private TextView nameRequired;
     private DatabaseReference listDataBase;
+    private FirebaseAuth dataBaseAuth;
+    private String userId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_list);
-        listDataBase = FirebaseDatabase.getInstance().getReference().child("List");
+        dataBaseAuth = FirebaseAuth.getInstance();
+        userId = dataBaseAuth.getCurrentUser().getUid();
+        listDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("List");
         nameRequired = (TextView) findViewById(R.id.nameRequiredTxt);
 
         addBtn = (Button) findViewById(R.id.addTaskBtn);

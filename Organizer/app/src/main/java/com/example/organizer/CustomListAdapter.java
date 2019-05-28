@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,6 +23,8 @@ public class CustomListAdapter extends ArrayAdapter {
     private final ArrayList<String> descriptionArray;
     private static ArrayList<String> statusArray;
     private final ArrayList<String> keyArray;
+    private FirebaseAuth dataBaseAuth;
+    private String userId;
 
 
     //constructor
@@ -52,7 +55,9 @@ public class CustomListAdapter extends ArrayAdapter {
         nameTextField.setText(taskArray.get(position));
         infoTextField.setText(descriptionArray.get(position));
 
-        listDataBase = FirebaseDatabase.getInstance().getReference().child("List");
+        dataBaseAuth = FirebaseAuth.getInstance();
+        userId = dataBaseAuth.getCurrentUser().getUid();
+        listDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("List");
         if(statusArray.get(position).equals("Not done")){
             checkBoxField.setChecked(false);
         }
