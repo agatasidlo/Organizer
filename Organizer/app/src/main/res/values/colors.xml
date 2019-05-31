@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="backgroundColor">#D1EEEB</color>
+    <color name="backgroundListColor">#ffa887</color>
+    <color name="backgroundScheduleColor">#ffee93</color>
+    <color name="backgroundCalendarColor">#ADFFB8</color>
     <color name="color1">#9256AC</color>
     <color name="color2">#39613E</color>
     <color name="color3">#FFEB3B</color>

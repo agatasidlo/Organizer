@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:orientation="vertical"
+    android:background="@drawable/backgroundorange"
     tools:context=".MenuActivity">
 
 
@@ -15,10 +16,10 @@
         android:text="@string/Kalendarz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.811"
+        app:layout_constraintHorizontal_bias="0.885"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarButton"
-        app:layout_constraintVertical_bias="0.052" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView2"
@@ -28,9 +29,10 @@
         android:text="@string/Lista"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.135"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listButton"
-        app:layout_constraintVertical_bias="0.002" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <TextView
@@ -40,58 +42,59 @@
         android:text="@string/Plan_zajec"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintHorizontal_bias="0.536"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scheduleButton"
-        app:layout_constraintVertical_bias="0.047" />
+        app:layout_constraintVertical_bias="0.032" />
 
     <Button
         android:id="@+id/listButton"
-        android:layout_width="125dp"
-        android:layout_height="105dp"
+        android:layout_width="78dp"
+        android:layout_height="85dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@mipmap/ic_list_round"
+        android:background="@drawable/ic_list"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
+        app:layout_constraintVertical_bias="0.147" />
 
     <Button
         android:id="@+id/calendarButton"
-        android:layout_width="125dp"
-        android:layout_height="105dp"
+        android:layout_width="83dp"
+        android:layout_height="81dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@mipmap/ic_calendar_round"
+        android:background="@drawable/ic_calendar"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.877"
+        app:layout_constraintHorizontal_bias="0.908"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58" />
+        app:layout_constraintVertical_bias="0.798" />
 
     <Button
         android:id="@+id/scheduleButton"
-        android:layout_width="125dp"
-        android:layout_height="105dp"
+        android:layout_width="112dp"
+        android:layout_height="68dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@mipmap/ic_schedule_round"
+        android:background="@drawable/ic_schedule"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.129"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.582" />
+        app:layout_constraintVertical_bias="0.499" />
 
 
     <android.support.constraint.Barrier
@@ -104,8 +107,12 @@
         android:id="@+id/logoutBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="524dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="536dp"
+        android:layout_marginBottom="32dp"
         android:text="wyloguj"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
