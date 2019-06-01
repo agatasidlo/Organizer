@@ -9,8 +9,8 @@
 
     <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarViewId"
-        android:layout_width="fill_parent"
-        android:layout_height="264dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:paddingLeft="10dp"
@@ -24,7 +24,9 @@
         app:compactCalendarTextSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/addNoteBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dataTextId"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monthViewId"
         app:layout_constraintVertical_bias="1.0" />
 
 
@@ -38,52 +40,63 @@
     <TextView
         android:id="@+id/dataTextId"
         android:layout_width="match_parent"
-        android:layout_height="111dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:background="#707070"
         android:gravity="center"
+        android:paddingTop="20px"
+        android:paddingBottom="20px"
         android:textColor="#FFFFFF"
         android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
         android:id="@+id/listCalendarId"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/addNoteBtn"
+        app:layout_constraintVertical_bias="0.412" />
 
     <Button
         android:id="@+id/addNoteBtn"
         android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="124dp"
         android:text="@string/addNoteCalendar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.734" />
-
-    <TextView
-        android:id="@+id/monthViewId"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.203" />
+        app:layout_constraintVertical_bias="0.85" />
+
+    <TextView
+        android:id="@+id/monthViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dataTextId"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
