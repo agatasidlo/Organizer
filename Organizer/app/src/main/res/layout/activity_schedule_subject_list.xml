@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.0"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="#504F4F"
+        app:tabSelectedTextColor="#000000"
         app:tabTextColor="#FFFF">
 
         <android.support.design.widget.TabItem
@@ -87,6 +87,9 @@
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="TextView"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="@+id/pager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

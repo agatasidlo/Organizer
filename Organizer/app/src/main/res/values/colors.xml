@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#D81B60</color>
     <color name="backgroundColor">#D1EEEB</color>
-    <color name="backgroundListColor">#ffa887</color>
-    <color name="backgroundScheduleColor">#ffee93</color>
-    <color name="backgroundCalendarColor">#ADFFB8</color>
-    <color name="color1">#9256AC</color>
+    <color name="backgroundListColor">#FCC6B3</color>
+    <color name="backgroundScheduleColor">#FCF0B3</color>
+    <color name="backgroundCalendarColor">#CCC6DD</color>
+    <color name="color1">#9268CE</color>
     <color name="color2">#39613E</color>
     <color name="color3">#FFEB3B</color>
 </resources>

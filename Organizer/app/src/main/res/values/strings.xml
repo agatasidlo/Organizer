@@ -40,6 +40,10 @@
     <string name="noteReq">Notatka jest wymagana!</string>
     <string name="addSubject">Dodaj nowy przedmiot</string>
     <string name="removeAllSubjects">Usuń wszystkie przedmioty</string>
+    <string name="logOut">Wyloguj się</string>
+    <string name="deleteUser">Usuń konto</string>
+    <string name="or">LUB</string>
+
 
     <string-array name="days_array">
         <item>Poniedziałek</item>

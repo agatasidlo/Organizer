@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_main"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -14,19 +14,24 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".AddToScheduleActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/Plan_zajec"></activity>
         <activity
             android:name=".ScheduleSubjectListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/Plan_zajec"></activity>
         <activity
             android:name=".AddToListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/Lista"></activity>
         <activity
             android:name=".CalendarActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/Kalendarz"></activity>
         <activity
             android:name=".ListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/Lista"></activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

@@ -44,8 +44,11 @@ public class ListActivity extends AppCompatActivity {
     private String userId;
 
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
+
         getMenuInflater().inflate(R.menu.list_menu, menu);
         return true;
     }
@@ -93,6 +96,8 @@ public class ListActivity extends AppCompatActivity {
         dataBaseAuth = FirebaseAuth.getInstance();
         userId = dataBaseAuth.getCurrentUser().getUid();
         listDataBase = FirebaseDatabase.getInstance().getReference().child(userId).child("List");
+
+
 
 // ------------------------- list --------------------------
 

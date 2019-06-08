@@ -18,7 +18,7 @@
             android:id="@+id/rowTextView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#6BCAC1"
+            android:background="#9780C2"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"/>
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:textColor="#6BCAC1"
+            android:textColor="#9780C2"
             android:textSize="18sp"/>
 
     </LinearLayout>

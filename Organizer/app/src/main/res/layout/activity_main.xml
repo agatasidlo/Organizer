@@ -92,12 +92,24 @@
         android:layout_marginRight="167dp"
         android:layout_marginBottom="8dp"
         android:text="Logowanie"
-        android:textSize="30dp"
         android:textColor="#000000"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.050000012" />
+
+    <TextView
+        android:id="@+id/orId"
+        android:layout_width="44dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="404dp"
+        android:gravity="center"
+        android:text="@string/or"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

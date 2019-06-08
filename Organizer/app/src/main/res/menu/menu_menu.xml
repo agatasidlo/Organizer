@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/logOutId"
+        android:title="@string/logOut"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/deleteUserId"
+        android:title="@string/deleteUser"
+        app:showAsAction="never" />
+
+</menu>
