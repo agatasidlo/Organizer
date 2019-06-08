@@ -41,7 +41,7 @@
     <TextView
         android:id="@+id/dataTextId"
         android:layout_width="match_parent"
-        android:layout_height="125dp"
+        android:layout_height="@android:dimen/dialog_min_width_major"
         android:layout_marginBottom="8dp"
         android:background="#FDFCFC"
         android:gravity="center"
@@ -76,14 +76,14 @@
         android:id="@+id/addNoteBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="124dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/addNoteCalendar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.909" />
+        app:layout_constraintVertical_bias="0.79" />
 
     <TextView
         android:id="@+id/monthViewId"
