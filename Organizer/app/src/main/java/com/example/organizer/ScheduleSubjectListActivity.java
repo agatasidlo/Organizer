@@ -414,7 +414,7 @@ public class ScheduleSubjectListActivity extends AppCompatActivity {
 
     public void removeAll(){
         DatabaseReference dataBase = FirebaseDatabase.getInstance().getReference();
-        dataBase.child("Schedule").removeValue();
+        dataBase.child(userId).child("Schedule").removeValue();
     }
 
 }
