@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -143,6 +145,7 @@ public class MenuActivity extends AppCompatActivity {
             Toast.makeText(MenuActivity.this, "Błąd", Toast.LENGTH_LONG).show();
         else {
             final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            final DatabaseReference dataBase = FirebaseDatabase.getInstance().getReference();
             AuthCredential authCredential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
 
             firebaseUser.reauthenticate(authCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -154,6 +157,7 @@ public class MenuActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(MenuActivity.this, "Konto usunięte", Toast.LENGTH_LONG).show();
+                                dataBase.child(firebaseUser.getUid()).removeValue();
                                 FirebaseAuth.getInstance().signOut();
                                 Intent intent = new Intent(MenuActivity.this, MainActivity.class);
                                 startActivity(intent);
