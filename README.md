@@ -14,8 +14,8 @@ System został podzielony na dwie warstwy:
 
 # Screeny
 
-![s1](https://user-images.githubusercontent.com/23523297/59206396-23eb5200-8ba5-11e9-8bf1-39e40512b711.png)
-![s2](https://user-images.githubusercontent.com/23523297/59206423-2baaf680-8ba5-11e9-9991-42fff2a1ab67.png)
-![s3](https://user-images.githubusercontent.com/23523297/59206436-31a0d780-8ba5-11e9-9cfe-fead5e0c40c6.png)
-![s4](https://user-images.githubusercontent.com/23523297/59206441-34033180-8ba5-11e9-939b-aa523d1542b9.png)
-![s5](https://user-images.githubusercontent.com/23523297/59206448-3796b880-8ba5-11e9-8684-fbc1e8359f56.png)
+<img width="270" alt="s1" src="https://user-images.githubusercontent.com/23523297/59207257-0323fc00-8ba7-11e9-8f85-46523c882b9a.png">
+<img width="270" alt="s2" src="https://user-images.githubusercontent.com/23523297/59207258-03bc9280-8ba7-11e9-8c69-35bc1c203821.png">
+<img width="270" alt="s3" src="https://user-images.githubusercontent.com/23523297/59207260-03bc9280-8ba7-11e9-80dc-a3d48a79cb2b.png">
+<img width="270" alt="s4" src="https://user-images.githubusercontent.com/23523297/59207261-03bc9280-8ba7-11e9-94c4-104abbb13140.png">
+<img width="270" alt="s5" src="https://user-images.githubusercontent.com/23523297/59207255-0323fc00-8ba7-11e9-9273-67f0b95f5680.png">
